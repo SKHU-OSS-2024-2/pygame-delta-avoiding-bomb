@@ -5,3 +5,7 @@
 ### 202114004 최다연
 ### 202114076 이정혁
 ### 202114097 박주원
+
+https://ai-creator.tistory.com/529
+
+https://drive.google.com/drive/folders/1P7-ibtlJKUEet1lbqkSAg7N8RyxOza_o
