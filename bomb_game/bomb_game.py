@@ -11,10 +11,16 @@ WHITE = (255, 255, 255)
 size = [600, 800]
 screen = pygame.display.set_mode(size)
 
+#화면에 글자를 띄우기 위한 폰트
+game_font = pygame.font.Font(None, 200)
+
 done = False
 clock = pygame.time.Clock()
 
+start_ticks = pygame.time.get_ticks()
+
 game_over = False  # 게임 오버 상태를 나타내는 변수
+
 
 def runGame():
     bomb_image = pygame.image.load('bomb.png')
@@ -81,6 +87,17 @@ def runGame():
                 if bomb['rect'].colliderect(person):
                     game_over = True
                 screen.blit(bomb_image, bomb['rect'])
+
+
+            #경과시간 계산
+            elapsed_time = (pygame.time.get_ticks() - start_ticks)
+
+            #타이머 화면 출력
+            timer = game_font.render(str(int(elapsed_time // 1000)) + ' : ' + str(int(elapsed_time % 1000)), True, (255,255,255))
+
+            #시간 화면에 뜨게
+            screen.blit(timer, (size[0]//2 - (timer.get_width() //2), size[1]//2 - (timer.get_height()//2)))
+
 
         if game_over:
             game_over_text = font.render("Game Over", True, WHITE)
