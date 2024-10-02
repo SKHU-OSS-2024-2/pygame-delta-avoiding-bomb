@@ -10,11 +10,17 @@ BLACK = (0, 0, 0)
 size = [600, 800]
 screen = pygame.display.set_mode(size)
 
+#화면에 글자를 띄우기 위한 폰트
+game_font = pygame.font.Font(None, 200)
+
 done = False
 clock = pygame.time.Clock()
 
+#시간 정보
+start_ticks = pygame.time.get_ticks()
+
 def runGame():
-    bomb_image = pygame.image.load('bomb.png')
+    bomb_image = pygame.image.load('/Users/cho/2024/오픈소스 SW개발/delta/pygame-delta-avoiding-filth/bomb_game/bomb.png')
     bomb_image = pygame.transform.scale(bomb_image, (50, 50))
     bombs = []
 
@@ -25,7 +31,7 @@ def runGame():
         dy = random.randint(3, 9)
         bombs.append({'rect': rect, 'dy': dy})
 
-    person_image = pygame.image.load('person.png')
+    person_image = pygame.image.load('/Users/cho/2024/오픈소스 SW개발/delta/pygame-delta-avoiding-filth/bomb_game/person.png')
     person_image = pygame.transform.scale(person_image, (100, 100))
     person = pygame.Rect(person_image.get_rect())
     person.left = size[0] // 2 - person.width // 2
@@ -77,8 +83,16 @@ def runGame():
                 done = True
             screen.blit(bomb_image, bomb['rect'])
 
-        pygame.display.update()
+        #경과시간 계산
+        elapsed_time = (pygame.time.get_ticks() - start_ticks)
 
+        #타이머 화면 출력
+        timer = game_font.render(str(int(elapsed_time // 1000)) + ' : ' + str(int(elapsed_time % 1000)), True, (255,255,255))
+
+        #시간 화면에 뜨게
+        screen.blit(timer, (size[0]//2 - (timer.get_width() //2), size[1]//2 - (timer.get_height()//2)))
+
+        pygame.display.update()
 
 runGame()
 pygame.quit()
