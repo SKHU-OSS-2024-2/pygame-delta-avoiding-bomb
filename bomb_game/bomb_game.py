@@ -11,7 +11,7 @@ WHITE = (255, 255, 255)
 size = [600, 800]
 screen = pygame.display.set_mode(size)
 
-#화면에 글자를 띄우기 위한 폰트
+# 화면에 글자를 띄우기 위한 폰트
 game_font = pygame.font.Font(None, 200)
 
 done = False
@@ -20,7 +20,7 @@ clock = pygame.time.Clock()
 start_ticks = pygame.time.get_ticks()
 
 game_over = False  # 게임 오버 상태를 나타내는 변수
-
+lives = 3  # 목숨 변수 추가
 
 def runGame():
     bomb_image = pygame.image.load('bomb.png')
@@ -41,8 +41,9 @@ def runGame():
     person.top = size[1] - person.height
     person_dx = 0
 
-    global done, game_over
+    global done, game_over, lives
     font = pygame.font.SysFont(None, 75)  # 게임오버 텍스트를 위한 폰트 설정
+    life_font = pygame.font.SysFont(None, 50)  # 목숨 표시를 위한 폰트 설정
 
     while not done:
         clock.tick(30)
@@ -85,17 +86,29 @@ def runGame():
 
             for bomb in bombs:
                 if bomb['rect'].colliderect(person):
-                    game_over = True
+                    bombs.remove(bomb)  # 충돌한 폭탄을 없앰
+                    rect = pygame.Rect(bomb_image.get_rect())
+                    rect.left = random.randint(0, size[0])
+                    rect.top = -100
+                    dy = random.randint(3, 9)
+                    bombs.append({'rect': rect, 'dy': dy})
+
+                    lives -= 1  # 목숨을 1 감소시킴
+                    if lives <= 0:
+                        game_over = True  # 목숨이 0이면 게임 오버
                 screen.blit(bomb_image, bomb['rect'])
 
+            # 목숨 표시
+            lives_text = life_font.render(f"Lives: {lives}", True, WHITE)
+            screen.blit(lives_text, (10, 10))
 
-            #경과시간 계산
+            # 경과시간 계산
             elapsed_time = (pygame.time.get_ticks() - start_ticks)
 
-            #타이머 화면 출력
+            # 타이머 화면 출력
             timer = game_font.render(str(int(elapsed_time // 1000)) + ' : ' + str(int(elapsed_time % 1000)), True, (255,255,255))
 
-            #시간 화면에 뜨게
+            # 시간 화면에 뜨게
             screen.blit(timer, (size[0]//2 - (timer.get_width() //2), size[1]//2 - (timer.get_height()//2)))
 
 
