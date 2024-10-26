@@ -1,17 +1,30 @@
-# pygame-delta-avoiding-filth
+# PYGAME-DELTA-AVOIDING-TRASH
 
-## 팀장 202314069 이진
+# 게임 소개
 
-### 202114004 최다연
-### 202114076 이정혁
-### 202114097 박주원
+**제목 : 오물풍선 피하기**
 
-참고문헌  
-https://ai-creator.tistory.com/529
+**스토리 : 하늘에서 오물풍선이 떨어집니다! 쓰레기에 범벅이 되지 않도록 피해보세요!**
 
-https://drive.google.com/drive/folders/1P7-ibtlJKUEet1lbqkSAg7N8RyxOza_o
+# 게임 시작 방법
 
-vscode를 이용한 pygame 구동 방법 및 pygame 제작에 대한 기본적인 설명  
-https://wonhwa.tistory.com/44
 
-https://huiyu.tistory.com/entry/Python-Pygame-%ED%99%98%EA%B2%BD%EA%B5%AC%EC%B6%95-Window10-VS-code
+
+# 게임 규칙
+
+게임 시작 전
+
+1. 시작을 누르면 게임이 시작됩니다.
+
+게임 플레이
+
+1. 캐릭터는 좌우방향키를 통해 움직임 제어가 가능합니다.
+2. 쓰레기와 충돌하면 생명이 하나씩 깎이게 됩니다.
+남은 생명은 우측 상단에서 확인할 수 있습니다.
+3. 주어진 3개의 생명을 모두 소진하면 게임이 종료됩니다. 
+
+게임 종료
+
+1. 살아남은 시간으로 기록을 세워보세요!
+2. 게임이 끝난 후 재시작 버튼으로 게임을 다시 시작할 수 있습니다.
+3. 게임이 끝난 후 종료 버튼으로 게임을 종료시킬 수 있습니다.
