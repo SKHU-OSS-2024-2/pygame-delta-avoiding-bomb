@@ -16,18 +16,25 @@
 Visual Sudio 다운로드
   
   
-1. [Visual Studio](https://visualstudio.microsoft.com/ko/) 공식 웹사이트에서 Visual Studio를 다운로드한다.
+1. [Visual Studio](https://visualstudio.microsoft.com/ko/)사이트에서 Visual Studio를 다운로드한다.
 
 
-2. Visual Stdio에서 clone한 코드 열어보기
+2. Visual Stdio에서 git hub에서 clone한 코드를 열어본다.
 
-3. pygame을 설치하기
-    터미널에서
+## pygame
+
+pygame 다운로드
+
+1. Visual Studio 터미널 창을 연다.
+
+
+2. pygame을 설치하기 위해 아래의 명령어를 입력한다.
 
          pip install pygame
 
-4. Pygame 실행
-    + bomb_game 파일에서 bomb_game.py를 눌러 실행하기
+## 게임 실행
+
+1. bomb_game 파일에서 bomb_game.py를 선택한 후 상단 메뉴에서 RUN-> Start Without Debugging을 선택한다.
 
 # 게임 규칙
 
