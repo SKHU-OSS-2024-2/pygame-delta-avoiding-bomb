@@ -23,7 +23,7 @@ game_over = False  # 게임 오버 상태를 나타내는 변수
 lives = 3  # 목숨 변수 추가
 
 def runGame():
-    bomb_image = pygame.image.load('bomb.png')
+    bomb_image = pygame.image.load('bomb_game/bomb.png')
     bomb_image = pygame.transform.scale(bomb_image, (50, 50))
     bombs = []
 
@@ -34,7 +34,7 @@ def runGame():
         dy = random.randint(3, 9)
         bombs.append({'rect': rect, 'dy': dy})
 
-    person_image = pygame.image.load('person.png')
+    person_image = pygame.image.load('bomb_game/person.png')
     person_image = pygame.transform.scale(person_image, (100, 100))
     person = pygame.Rect(person_image.get_rect())
     person.left = size[0] // 2 - person.width // 2
@@ -72,7 +72,7 @@ def runGame():
                     rect = pygame.Rect(bomb_image.get_rect())
                     rect.left = random.randint(0, size[0])
                     rect.top = -100
-                    dy = random.randint(3, 9)
+                    dy = random.randint(3+elapsed_time//5000, 9+elapsed_time//10000)
                     bombs.append({'rect': rect, 'dy': dy})
 
             person.left = person.left + person_dx
@@ -90,7 +90,7 @@ def runGame():
                     rect = pygame.Rect(bomb_image.get_rect())
                     rect.left = random.randint(0, size[0])
                     rect.top = -100
-                    dy = random.randint(3, 9)
+                    dy = random.randint(3+elapsed_time//5000, 9+elapsed_time//10000)
                     bombs.append({'rect': rect, 'dy': dy})
 
                     lives -= 1  # 목숨을 1 감소시킴
@@ -110,7 +110,6 @@ def runGame():
 
             # 시간 화면에 뜨게
             screen.blit(timer, (size[0]//2 - (timer.get_width() //2), size[1]//2 - (timer.get_height()//2)))
-
 
         if game_over:
             game_over_text = font.render("Game Over", True, WHITE)
