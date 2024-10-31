@@ -7,25 +7,7 @@
 **스토리 : 하늘에서 오물풍선이 떨어집니다! 쓰레기에 범벅이 되지 않도록 피해보세요!**
 
 # 게임 시작 방법
-## 깃허브에서 fork 및 clone
-+ 올라온 코드를 자신의 깃허브에 fork 후 로컬에 clone한다.
 
-## Visual Studio
-
-Visual Sudio 다운로드
-  
-  
-1. [Visual Studio](https://visualstudio.microsoft.com/ko/) 공식 웹사이트에서 Visual Studio를 다운로드한다.
-
-
-2. Visual Stdio에서 clone한 코드 열기
-
-3. pygame을 설치하기
-
-         pip install pygame
-
-4. Pygame 실행
-    + bomb_game 파일에서 bomb_game.py를 눌러 실행하기
 
 # 게임 규칙
 
