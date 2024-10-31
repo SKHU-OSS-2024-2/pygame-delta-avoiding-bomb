@@ -12,7 +12,10 @@
 
 ## Visual Studio
 
-  1.[Visual Studio](https://visualstudio.microsoft.com/ko/) 공식 웹사이트에서 Visual Studio를 다운로드한다.
+Visual Sudio 다운로드
+  
+  
+1. [Visual Studio](https://visualstudio.microsoft.com/ko/) 공식 웹사이트에서 Visual Studio를 다운로드한다.
 
 
 2. Visual Stdio에서 clone한 코드 열기
