@@ -28,3 +28,8 @@
 1. 살아남은 시간으로 기록을 세워보세요!
 2. 게임이 끝난 후 재시작 버튼으로 게임을 다시 시작할 수 있습니다.
 3. 게임이 끝난 후 종료 버튼으로 게임을 종료시킬 수 있습니다.
+
+
+## License
+
+This project is licensed under the terms of the [MIT license](./LICENSE).
