@@ -31,7 +31,7 @@ def runGame():
         rect = pygame.Rect(bomb_image.get_rect())
         rect.left = random.randint(0, size[0])
         rect.top = -100
-        dy = random.randint(3, 9)
+        dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)  # 시간에 따른 하강 속도 증가
         bombs.append({'rect': rect, 'dy': dy})
 
     person_image = pygame.image.load('person.png')
@@ -72,7 +72,7 @@ def runGame():
                     rect = pygame.Rect(bomb_image.get_rect())
                     rect.left = random.randint(0, size[0])
                     rect.top = -100
-                    dy = random.randint(3, 9)
+                    dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)  # 시간에 따른 하강 속도 증가
                     bombs.append({'rect': rect, 'dy': dy})
 
             person.left = person.left + person_dx
