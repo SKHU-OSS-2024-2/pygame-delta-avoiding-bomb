@@ -23,7 +23,7 @@ game_over = False  # 게임 오버 상태를 나타내는 변수
 lives = 3  # 목숨 변수 추가
 
 def runGame():
-    bomb_image = pygame.image.load('bomb.png')
+    bomb_image = pygame.image.load('pygame-delta-avoiding-filth/bomb_game/img/bomb.png')
     bomb_image = pygame.transform.scale(bomb_image, (50, 50))
     bombs = []
 
@@ -34,7 +34,7 @@ def runGame():
         dy = random.randint(3, 9)
         bombs.append({'rect': rect, 'dy': dy})
 
-    person_image = pygame.image.load('person.png')
+    person_image = pygame.image.load('pygame-delta-avoiding-filth/bomb_game/img/person.png')
     person_image = pygame.transform.scale(person_image, (100, 100))
     person = pygame.Rect(person_image.get_rect())
     person.left = size[0] // 2 - person.width // 2
@@ -44,6 +44,8 @@ def runGame():
     global done, game_over, lives
     font = pygame.font.SysFont(None, 75)  # 게임오버 텍스트를 위한 폰트 설정
     life_font = pygame.font.SysFont(None, 50)  # 목숨 표시를 위한 폰트 설정
+
+    game_over_time = None #게임 오버 시간을 저장하기 위한 변수
 
     while not done:
         clock.tick(30)
@@ -96,6 +98,7 @@ def runGame():
                     lives -= 1  # 목숨을 1 감소시킴
                     if lives <= 0:
                         game_over = True  # 목숨이 0이면 게임 오버
+                        game_over_time = (pygame.time.get_ticks() - start_ticks) / 1000 # 게임 오버 시 경과 시간 저장
                 screen.blit(bomb_image, bomb['rect'])
 
             # 목숨 표시
@@ -106,7 +109,7 @@ def runGame():
             elapsed_time = (pygame.time.get_ticks() - start_ticks)
 
             # 타이머 화면 출력
-            timer = game_font.render(str(int(elapsed_time // 1000)) + ' : ' + str(int(elapsed_time % 1000)), True, (255,255,255))
+            timer = game_font.render(str(int(elapsed_time // 1000)) + ' . ' + str(int(elapsed_time % 1000)), True, (255,255,255))
 
             # 시간 화면에 뜨게
             screen.blit(timer, (size[0]//2 - (timer.get_width() //2), size[1]//2 - (timer.get_height()//2)))
@@ -114,7 +117,9 @@ def runGame():
 
         if game_over:
             game_over_text = font.render("Game Over", True, WHITE)
+            game_over_time_text = font.render(f"Time: {game_over_time:.2f} sec", True, WHITE)
             screen.blit(game_over_text, (size[0] // 2 - game_over_text.get_width() // 2, size[1] // 2 - game_over_text.get_height() // 2))
+            screen.blit(game_over_time_text, (size[0] // 2 - game_over_time_text.get_width() // 2, size[1] // 2 + game_over_text.get_height()))
             pygame.display.update()
 
         pygame.display.update()
