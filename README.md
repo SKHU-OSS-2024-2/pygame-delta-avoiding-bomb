@@ -8,7 +8,34 @@
 
 # 게임 시작 방법
 
+## 깃허브에서 fork 및 clone
++ 올라온 코드를 자신의 깃허브에 fork 후 로컬에 clone한다.
 
+
+## Visual Studio
+
+Visual Sudio 다운로드
+  
+  
+1. [Visual Studio](https://visualstudio.microsoft.com/ko/)사이트에서 Visual Studio를 다운로드한다.
+
+
+2. Visual Stdio에서 git hub에서 clone한 코드를 열어본다.
+
+## pygame
+
+pygame 다운로드
+
+1. Visual Studio 터미널 창을 연다.
+
+
+2. pygame을 설치하기 위해 아래의 명령어를 입력한다.
+
+         pip install pygame
+
+## 게임 실행
+
+1. bomb_game 파일에서 bomb_game.py를 선택한 후 상단 메뉴에서 RUN-> Start Without Debugging을 선택한다.
 
 # 게임 규칙
 
