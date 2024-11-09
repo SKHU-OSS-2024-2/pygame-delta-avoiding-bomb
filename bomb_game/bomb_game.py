@@ -3,12 +3,25 @@ import random
 import os
 
 pygame.init()  # pygame 초기화
+pygame.mixer.init() # pygame mixer 초기화 (배경 음악)
 
 # 게임 화면 크기 및 색상 설정
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 size = [600, 800]
 screen = pygame.display.set_mode(size)
+
+# 배경 음악 파일 로드
+bgm_1 = 'bomb_game\sound\BGM1.wav'
+bgm_2 = 'bomb_game\sound\BGM2.wav'
+
+# 첫 번째 음악을 로드하고 재생
+pygame.mixer.music.load(bgm_1)
+pygame.mixer.music.set_volume(0.3)
+pygame.mixer.music.play()  # 첫 번째 음악 재생
+
+# 두 번째 음악을 대기열에 추가
+pygame.mixer.music.queue(bgm_2)
 
 # 타이머에 사용할 폰트 설정
 game_font = pygame.font.Font(None, 200)
@@ -19,10 +32,6 @@ clock = pygame.time.Clock()  # 프레임 속도 제어를 위한 시계 객체
 start_ticks = pygame.time.get_ticks()  # 시작 시간 기록
 game_over = False  # 게임 오버 상태를 나타내는 변수
 lives = 3  # 초기 목숨 개수 설정
-
-def text_objects(text, font): # START버튼 
-    textSurface = font.render(text, True, WHITE)
-    return textSurface, textSurface.get_rect()
 
 # 게임 실행 함수 정의
 def runGame():
