@@ -12,8 +12,8 @@ size = [600, 800]
 screen = pygame.display.set_mode(size)
 
 # 배경 음악 파일 로드
-bgm_1 = 'bomb_game\sound\BGM1.wav'
-bgm_2 = 'bomb_game\sound\BGM2.wav'
+bgm_1 = 'bomb_game/sound/BGM1.wav'
+bgm_2 = 'bomb_game/sound/BGM2.wav'
 
 # 첫 번째 음악을 로드하고 재생
 pygame.mixer.music.load(bgm_1)
