@@ -61,7 +61,7 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
 
 # 게임 실행 함수 정의
 def runGame(): 
-    
+
     global done, game_over, lives, start_ticks, elapsed_time
     reset()
 
@@ -161,6 +161,8 @@ def runGame():
             game_over_time_text = font.render(f"Time: {game_over_time:.2f} sec", True, WHITE)
             screen.blit(game_over_text, (size[0] // 2 - game_over_text.get_width() // 2, size[1] // 2 - game_over_text.get_height() // 2))
             screen.blit(game_over_time_text, (size[0] // 2 - game_over_time_text.get_width() // 2, size[1] // 2 + game_over_text.get_height()))
+            endBtn=button("Quit", 100,525,400,100,action=True,fcolor=WHITE)
+            
             pygame.display.update()
 
         pygame.display.update()  # 화면 업데이트
