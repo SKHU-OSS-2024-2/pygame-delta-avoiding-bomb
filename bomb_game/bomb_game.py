@@ -33,6 +33,10 @@ start_ticks = pygame.time.get_ticks()  # 시작 시간 기록
 game_over = False  # 게임 오버 상태를 나타내는 변수
 lives = 3  # 초기 목숨 개수 설정
 
+def text_objects(text, font): # START버튼 
+    textSurface = font.render(text, True, WHITE)
+    return textSurface, textSurface.get_rect()
+
 # 게임 실행 함수 정의
 def runGame():
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
