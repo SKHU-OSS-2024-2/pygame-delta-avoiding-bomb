@@ -164,6 +164,7 @@ def runGame():
             endBtn=button("Quit", 100,525,400,100,action=True,fcolor=WHITE)
             if endBtn == True:
                 return pygame.quit()
+            reBtn=button("RE?", 100,650,400,100,action=True,fcolor=WHITE)
 
             pygame.display.update()
 
