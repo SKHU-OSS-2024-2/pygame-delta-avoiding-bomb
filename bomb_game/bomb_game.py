@@ -26,12 +26,14 @@ pygame.mixer.music.queue(bgm_2)
 # 타이머에 사용할 폰트 설정
 game_font = pygame.font.Font(None, 200)
 
-# 게임 상태와 관련된 변수 초기화
-done = False  # 게임 루프를 제어하는 변수
-clock = pygame.time.Clock()  # 프레임 속도 제어를 위한 시계 객체
-start_ticks = pygame.time.get_ticks()  # 시작 시간 기록
-game_over = False  # 게임 오버 상태를 나타내는 변수
-lives = 3  # 초기 목숨 개수 설정
+def reset(): # 게임 상태와 관련된 변수 초기화 함수
+    global done, clock, start_ticks, game_over, lives, elapsed_time
+    done = False # 게임 루프를 제어하는 변수
+    clock = pygame.time.Clock() # 프레임 속도 제어를 위한 시계 객체
+    start_ticks = pygame.time.get_ticks() # 시작 시간 기록
+    game_over = False # 게임 오버 상태를 나타내는 변수
+    lives = 3 # 초기 목숨 개수 설정
+    elapsed_time = 0 # 초기화 추가
 
 def text_objects(text, font): # START버튼 
     textSurface = font.render(text, True, WHITE)
@@ -58,11 +60,12 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
     screen.blit(textSurf, textRect)
 
 # 게임 실행 함수 정의
-def runGame():
+def runGame(): 
+    reset()
+
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
     bomb_image = pygame.transform.scale(bomb_image, (50, 50))  # 폭탄 이미지 크기를 50x50으로 조절
     bombs = []  # 폭탄 정보를 담을 리스트 초기화
-    elapsed_time = 0  # 초기화 추가
 
     # 초기 폭탄 5개 생성
     for i in range(5):
