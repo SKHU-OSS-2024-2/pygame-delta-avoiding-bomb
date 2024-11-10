@@ -61,6 +61,8 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
 
 # 게임 실행 함수 정의
 def runGame(): 
+    
+    global done, game_over, lives, start_ticks, elapsed_time
     reset()
 
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
@@ -83,7 +85,6 @@ def runGame():
     person.top = size[1] - person.height  # 캐릭터를 화면 하단에 배치
     person_dx = 0  # 캐릭터의 초기 이동 속도 설정
 
-    global done, game_over, lives
     font = pygame.font.SysFont(None, 75)  # 게임오버 텍스트를 위한 폰트 설정
     life_font = pygame.font.SysFont(None, 50)  # 목숨 표시를 위한 폰트 설정
 
