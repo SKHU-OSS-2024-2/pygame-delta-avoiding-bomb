@@ -82,6 +82,12 @@ def runGame():
 
         # 게임 오버가 아닐 때 게임 로직 실행
         if not game_over:
+            # 경과 시간 계산 및 표시
+            elapsed_time = pygame.time.get_ticks() - start_ticks
+            timer = game_font.render(f"{elapsed_time // 1000} : {elapsed_time % 100:02d}", True, WHITE).convert_alpha()
+            timer.set_alpha(90) #투명도 설정 0~255
+            screen.blit(timer, (size[0] // 2 - timer.get_width() // 2, size[1] // 2 - timer.get_height() // 2))
+
             # 폭탄 이동 및 화면을 벗어난 폭탄 제거 후 새 폭탄 추가
             for bomb in bombs:
                 bomb['rect'].top += bomb['dy']  # 폭탄의 y 좌표에 속도를 더하여 아래로 이동
@@ -120,12 +126,6 @@ def runGame():
             # 목숨 개수 표시
             lives_text = life_font.render(f"Lives: {lives}", True, WHITE)
             screen.blit(lives_text, (10, 10))
-
-
-            # 경과 시간 계산 및 표시
-            elapsed_time = pygame.time.get_ticks() - start_ticks
-            timer = game_font.render(f"{elapsed_time // 1000} : {elapsed_time % 1000}", True, WHITE)
-            screen.blit(timer, (size[0] // 2 - timer.get_width() // 2, size[1] // 2 - timer.get_height() // 2))
 
         # 게임 오버 시 메시지 출력
         if game_over:
