@@ -162,7 +162,9 @@ def runGame():
             screen.blit(game_over_text, (size[0] // 2 - game_over_text.get_width() // 2, size[1] // 2 - game_over_text.get_height() // 2))
             screen.blit(game_over_time_text, (size[0] // 2 - game_over_time_text.get_width() // 2, size[1] // 2 + game_over_text.get_height()))
             endBtn=button("Quit", 100,525,400,100,action=True,fcolor=WHITE)
-            
+            if endBtn == True:
+                return pygame.quit()
+
             pygame.display.update()
 
         pygame.display.update()  # 화면 업데이트
