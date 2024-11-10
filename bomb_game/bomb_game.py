@@ -165,7 +165,9 @@ def runGame():
             if endBtn == True:
                 return pygame.quit()
             reBtn=button("RE?", 100,650,400,100,action=True,fcolor=WHITE)
-
+            if reBtn == True:
+                return runGame()
+            
             pygame.display.update()
 
         pygame.display.update()  # 화면 업데이트
