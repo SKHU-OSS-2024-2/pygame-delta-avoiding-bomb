@@ -12,8 +12,8 @@ size = [600, 800]
 screen = pygame.display.set_mode(size)
 
 # 배경 음악 파일 로드
-bgm_1 = 'bomb_game\sound\BGM1.wav'
-bgm_2 = 'bomb_game\sound\BGM2.wav'
+bgm_1 = 'bomb_game/sound/BGM1.wav'
+bgm_2 = 'bomb_game/sound/BGM2.wav'
 
 # 첫 번째 음악을 로드하고 재생
 pygame.mixer.music.load(bgm_1)
@@ -33,6 +33,29 @@ start_ticks = pygame.time.get_ticks()  # 시작 시간 기록
 game_over = False  # 게임 오버 상태를 나타내는 변수
 lives = 3  # 초기 목숨 개수 설정
 
+def text_objects(text, font): # START버튼 
+    textSurface = font.render(text, True, WHITE)
+    return textSurface, textSurface.get_rect()
+
+def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+
+    if x+w>mouse[0]> x and y+h > mouse[1] > y:
+        pygame.draw.rect(screen, WHITE, (x,y,w,h) )
+        fcolor=BLACK
+
+        if click[0] == 1 and action !=None:
+            return True
+    else:
+        pygame.draw.rect(screen, BLACK, (x,y,w,h))
+        fcolor=WHITE
+
+    smallTEXT = pygame.font.SysFont("malgungothic", 30)
+    textSurf = smallTEXT.render(msg, True, fcolor)
+    textRect = textSurf.get_rect()
+    textRect.center = ((x+(w/2)),(y+(h/2)))
+    screen.blit(textSurf, textRect)
 
 # 게임 실행 함수 정의
 def runGame():
@@ -138,5 +161,20 @@ def runGame():
 
         pygame.display.update()  # 화면 업데이트
 
-runGame()
+def intro():
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        strBtn=button("START",200,500,200,100,action=True,fcolor=WHITE)
+        if strBtn == True:
+            return runGame()
+        pygame.display.update()        
+
+intro()
+
 pygame.quit()  # 게임 종료
