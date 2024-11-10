@@ -181,9 +181,12 @@ def intro():
                 pygame.quit()
                 quit()
 
-        strBtn=button("START",200,500,200,100,action=True,fcolor=WHITE)
+        strBtn=button("Start",100,525,400,100,action=True,fcolor=WHITE)
         if strBtn == True:
             return runGame()
+        endBtn=button("Quit", 100,650,400,100,action=True,fcolor=WHITE)
+        if endBtn == True:
+            return pygame.quit()
         pygame.display.update()        
 
 intro()
