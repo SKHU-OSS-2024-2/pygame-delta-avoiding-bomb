@@ -181,7 +181,7 @@ def intro():
                 pygame.quit()
                 quit()
 
-        strBtn=button("START",200,500,200,100,action=True,fcolor=WHITE)
+        strBtn=button("Start",100,525,400,100,action=True,fcolor=WHITE)
         if strBtn == True:
             return runGame()
         pygame.display.update()        
