@@ -37,15 +37,6 @@ def text_objects(text, font): # START버튼
     textSurface = font.render(text, True, WHITE)
     return textSurface, textSurface.get_rect()
 
-
-
-# 게임 실행 함수 정의
-def runGame():
-    bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
-    bomb_image = pygame.transform.scale(bomb_image, (50, 50))  # 폭탄 이미지 크기를 50x50으로 조절
-    bombs = []  # 폭탄 정보를 담을 리스트 초기화
-    elapsed_time = 0  # 초기화 추가
-
 def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
@@ -65,6 +56,13 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
     textRect = textSurf.get_rect()
     textRect.center = ((x+(w/2)),(y+(h/2)))
     screen.blit(textSurf, textRect)
+
+# 게임 실행 함수 정의
+def runGame():
+    bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
+    bomb_image = pygame.transform.scale(bomb_image, (50, 50))  # 폭탄 이미지 크기를 50x50으로 조절
+    bombs = []  # 폭탄 정보를 담을 리스트 초기화
+    elapsed_time = 0  # 초기화 추가
 
     # 초기 폭탄 5개 생성
     for i in range(5):
