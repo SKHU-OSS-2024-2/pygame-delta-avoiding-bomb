@@ -163,5 +163,20 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
 
         pygame.display.update()  # 화면 업데이트
 
-runGame()
+def intro():
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        strBtn=button("START",200,500,200,100,action=True,fcolor=WHITE)
+        if strBtn == True:
+            return runGame()
+        pygame.display.update()        
+
+intro()
+
 pygame.quit()  # 게임 종료
