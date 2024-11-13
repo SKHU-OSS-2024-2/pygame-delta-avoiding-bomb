@@ -26,19 +26,48 @@ pygame.mixer.music.queue(bgm_2)
 # 타이머에 사용할 폰트 설정
 game_font = pygame.font.Font(None, 200)
 
-# 게임 상태와 관련된 변수 초기화
-done = False  # 게임 루프를 제어하는 변수
-clock = pygame.time.Clock()  # 프레임 속도 제어를 위한 시계 객체
-start_ticks = pygame.time.get_ticks()  # 시작 시간 기록
-game_over = False  # 게임 오버 상태를 나타내는 변수
-lives = 3  # 초기 목숨 개수 설정
+def reset(): # 게임 상태와 관련된 변수 초기화 함수
+    global done, clock, start_ticks, game_over, lives, elapsed_time
+    done = False # 게임 루프를 제어하는 변수
+    clock = pygame.time.Clock() # 프레임 속도 제어를 위한 시계 객체
+    start_ticks = pygame.time.get_ticks() # 시작 시간 기록
+    game_over = False # 게임 오버 상태를 나타내는 변수
+    lives = 3 # 초기 목숨 개수 설정
+    elapsed_time = 0 # 초기화 추가
+
+def text_objects(text, font): # START버튼 
+    textSurface = font.render(text, True, WHITE)
+    return textSurface, textSurface.get_rect()
+
+def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+
+    if x+w>mouse[0]> x and y+h > mouse[1] > y:
+        pygame.draw.rect(screen, WHITE, (x,y,w,h) )
+        fcolor=BLACK
+
+        if click[0] == 1 and action !=None:
+            return True
+    else:
+        pygame.draw.rect(screen, BLACK, (x,y,w,h))
+        fcolor=WHITE
+
+    smallTEXT = pygame.font.SysFont("malgungothic", 30)
+    textSurf = smallTEXT.render(msg, True, fcolor)
+    textRect = textSurf.get_rect()
+    textRect.center = ((x+(w/2)),(y+(h/2)))
+    screen.blit(textSurf, textRect)
 
 # 게임 실행 함수 정의
-def runGame():
+def runGame(): 
+
+    global done, game_over, lives, start_ticks, elapsed_time
+    reset()
+
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
     bomb_image = pygame.transform.scale(bomb_image, (50, 50))  # 폭탄 이미지 크기를 50x50으로 조절
     bombs = []  # 폭탄 정보를 담을 리스트 초기화
-    elapsed_time = 0  # 초기화 추가
 
     # 초기 폭탄 5개 생성
     for i in range(5):
@@ -56,7 +85,6 @@ def runGame():
     person.top = size[1] - person.height  # 캐릭터를 화면 하단에 배치
     person_dx = 0  # 캐릭터의 초기 이동 속도 설정
 
-    global done, game_over, lives
     font = pygame.font.SysFont(None, 75)  # 게임오버 텍스트를 위한 폰트 설정
     life_font = pygame.font.SysFont(None, 50)  # 목숨 표시를 위한 폰트 설정
 
@@ -82,6 +110,12 @@ def runGame():
 
         # 게임 오버가 아닐 때 게임 로직 실행
         if not game_over:
+            # 경과 시간 계산 및 표시
+            elapsed_time = pygame.time.get_ticks() - start_ticks
+            timer = game_font.render(f"{elapsed_time // 1000} : {elapsed_time % 100:02d}", True, WHITE).convert_alpha()
+            timer.set_alpha(90) #투명도 설정 0~255
+            screen.blit(timer, (size[0] // 2 - timer.get_width() // 2, size[1] // 2 - timer.get_height() // 2))
+
             # 폭탄 이동 및 화면을 벗어난 폭탄 제거 후 새 폭탄 추가
             for bomb in bombs:
                 bomb['rect'].top += bomb['dy']  # 폭탄의 y 좌표에 속도를 더하여 아래로 이동
@@ -121,21 +155,40 @@ def runGame():
             lives_text = life_font.render(f"Lives: {lives}", True, WHITE)
             screen.blit(lives_text, (10, 10))
 
-
-            # 경과 시간 계산 및 표시
-            elapsed_time = pygame.time.get_ticks() - start_ticks
-            timer = game_font.render(f"{elapsed_time // 1000} : {elapsed_time % 1000}", True, WHITE)
-            screen.blit(timer, (size[0] // 2 - timer.get_width() // 2, size[1] // 2 - timer.get_height() // 2))
-
         # 게임 오버 시 메시지 출력
         if game_over:
             game_over_text = font.render("Game Over", True, WHITE)
             game_over_time_text = font.render(f"Time: {game_over_time:.2f} sec", True, WHITE)
             screen.blit(game_over_text, (size[0] // 2 - game_over_text.get_width() // 2, size[1] // 2 - game_over_text.get_height() // 2))
             screen.blit(game_over_time_text, (size[0] // 2 - game_over_time_text.get_width() // 2, size[1] // 2 + game_over_text.get_height()))
+            endBtn=button("Quit", 100,525,400,100,action=True,fcolor=WHITE)
+            if endBtn == True:
+                return pygame.quit()
+            reBtn=button("RE?", 100,650,400,100,action=True,fcolor=WHITE)
+            if reBtn == True:
+                return runGame()
+            
             pygame.display.update()
 
         pygame.display.update()  # 화면 업데이트
 
-runGame()
+def intro():
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        strBtn=button("Start",100,525,400,100,action=True,fcolor=WHITE)
+        if strBtn == True:
+            return runGame()
+        endBtn=button("Quit", 100,650,400,100,action=True,fcolor=WHITE)
+        if endBtn == True:
+            return pygame.quit()
+        pygame.display.update()        
+
+intro()
+
 pygame.quit()  # 게임 종료
