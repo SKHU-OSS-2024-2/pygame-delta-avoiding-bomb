@@ -66,7 +66,7 @@ def runGame():
     reset()
 
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
-    bomb_image = pygame.transform.scale(bomb_image, (50, 50))  # 폭탄 이미지 크기를 50x50으로 조절
+    bomb_image = pygame.transform.scale(bomb_image, (50, 75))  # 폭탄 이미지 크기를 50x50으로 조절
     bombs = []  # 폭탄 정보를 담을 리스트 초기화
 
     # 초기 폭탄 5개 생성
