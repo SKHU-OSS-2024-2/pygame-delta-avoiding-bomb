@@ -15,13 +15,8 @@ screen = pygame.display.set_mode(size)
 bgm_1 = 'bomb_game/sound/BGM1.wav'
 bgm_2 = 'bomb_game/sound/BGM2.wav'
 
-# 첫 번째 음악을 로드하고 재생
-pygame.mixer.music.load(bgm_1)
+# 배경 음악 소리 조절
 pygame.mixer.music.set_volume(0.3)
-pygame.mixer.music.play()  # 첫 번째 음악 재생
-
-# 두 번째 음악을 대기열에 추가
-pygame.mixer.music.queue(bgm_2)
 
 # 타이머에 사용할 폰트 설정
 game_font = pygame.font.Font(None, 200)
@@ -63,10 +58,15 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
 def runGame(): 
 
     global done, game_over, lives, start_ticks, elapsed_time
+    
+    pygame.mixer.music.load(bgm_1)  # 첫 번째 음악을 로드
+    pygame.mixer.music.queue(bgm_2) # 두 번째 음악을 대기열에 추가
+    pygame.mixer.music.play()  # 첫 번째 음악 재생
+    
     reset()
 
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
-    bomb_image = pygame.transform.scale(bomb_image, (50, 50))  # 폭탄 이미지 크기를 50x50으로 조절
+    bomb_image = pygame.transform.scale(bomb_image, (50, 75))  # 폭탄 이미지 크기를 50x50으로 조절
     bombs = []  # 폭탄 정보를 담을 리스트 초기화
 
     # 초기 폭탄 5개 생성
