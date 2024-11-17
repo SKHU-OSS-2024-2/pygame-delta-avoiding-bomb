@@ -3,7 +3,12 @@ import random
 import os
 
 pygame.init()  # pygame 초기화
-pygame.mixer.init() # pygame mixer 초기화 (배경 음악)
+try:
+    pygame.mixer.init() # pygame mixer 초기화 (배경 음악)
+    pygame.mixer.music.set_volume(0.3)
+except pygame.error as e:
+    print("재생 장치 관련 오류로 인해 BGM이 나오지 않습니다.")
+    print(f"{e}")
 
 # 게임 화면 크기 및 색상 설정
 BLACK = (0, 0, 0)
@@ -16,7 +21,7 @@ bgm_1 = 'bomb_game/sound/BGM1.wav'
 bgm_2 = 'bomb_game/sound/BGM2.wav'
 
 # 배경 음악 소리 조절
-pygame.mixer.music.set_volume(0.3)
+
 
 # 타이머에 사용할 폰트 설정
 game_font = pygame.font.Font(None, 200)
@@ -59,10 +64,14 @@ def runGame():
 
     global done, game_over, lives, start_ticks, elapsed_time
     
-    pygame.mixer.music.load(bgm_1)  # 첫 번째 음악을 로드
-    pygame.mixer.music.queue(bgm_2) # 두 번째 음악을 대기열에 추가
-    pygame.mixer.music.play()  # 첫 번째 음악 재생
-    
+    try:
+        pygame.mixer.music.load(bgm_1)  # 첫 번째 음악을 로드
+        pygame.mixer.music.queue(bgm_2) # 두 번째 음악을 대기열에 추가
+        pygame.mixer.music.play()  # 첫 번째 음악 재생
+    except pygame.error as e:
+        print("재생 장치 관련 오류로 인해 BGM이 나오지 않습니다.")
+        print(f"{e}")
+        
     reset()
 
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
