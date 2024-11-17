@@ -19,6 +19,8 @@ screen = pygame.display.set_mode(size)
 # 배경 음악 파일 로드
 bgm_1 = 'bomb_game/sound/BGM1.wav'
 bgm_2 = 'bomb_game/sound/BGM2.wav'
+bgm_3 = 'bomb_game/sound/BGM3.wav'
+bgm_4 = 'bomb_game/sound/BGM4.wav'
 
 # 배경 음악 소리 조절
 
@@ -156,6 +158,10 @@ def runGame():
                     bombs.append({'rect': rect, 'dy': dy})  # 새 폭탄 추가
                     lives -= 1  # 목숨 감소
                     if lives <= 0:
+                        pygame.mixer.music.stop()  # 기존 배경음악 정지
+                        pygame.mixer.music.load(bgm_3)  # 게임 종료 음악 로드
+                        pygame.mixer.music.play()  # 게임 종료 음악 재생
+                        pygame.mixer.music.queue(bgm_4)  # bgm_3 종료 후 bgm_4 재생 대기열에 추가
                         game_over = True  # 목숨이 0이면 게임 오버
                         game_over_time = (pygame.time.get_ticks() - start_ticks) / 1000 # 게임 오버 시 경과 시간 저장
                 screen.blit(bomb_image, bomb['rect'])
