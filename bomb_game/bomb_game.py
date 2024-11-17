@@ -160,8 +160,8 @@ def runGame():
     reset()
 
     heart_spawned = False # 화면에 하트가 존재하는가
-    last_heart_time = pygame.time.get_ticks() # 마지막 하트 생성 시간 기록
-    
+    last_heart_time = 0 # 마지막 하트 생성 시간 기록
+
     heart_image = pygame.image.load('bomb_game/img/heart.png')
     heart_image = pygame.transform.scale(heart_image, (70, 70)) #생명 이미지 크기를 조절
     heart = pygame.Rect(heart_image.get_rect())
@@ -306,6 +306,7 @@ def runGame():
                     game_over_time = (pygame.time.get_ticks() - start_ticks) / 1000
                     bombs.clear()   # 게임 오버 시 모든 폭탄 제거
                     heart.top = -150 # 게임 오버 시 떨어지고 있는 생명 제거
+                    heart_spawned = False
             
             #생명그리기
             if heart_spawned == True:
