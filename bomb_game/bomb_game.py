@@ -299,8 +299,12 @@ def runGame():
                 lives -= 1
 
                 if lives <= 0:
-                    game_over = True
-                    game_over_time = (pygame.time.get_ticks() - start_ticks) / 1000
+                    pygame.mixer.music.stop()  # 기존 배경음악 정지
+                    pygame.mixer.music.load(bgm_3)  # 게임 종료 음악 로드
+                    pygame.mixer.music.play()  # 게임 종료 음악 재생
+                    pygame.mixer.music.queue(bgm_4)  # bgm_3 종료 후 bgm_4 재생 대기열에 추가
+                    game_over = True    # 목숨이 0이면 게임 오버
+                    game_over_time = (pygame.time.get_ticks() - start_ticks) / 1000 # 게임 오버 시 경과 시간 저장
                     bombs.clear()   # 게임 오버 시 모든 폭탄 제거
                     heart.top = -150 # 게임 오버 시 떨어지고 있는 생명 제거
                     heart_spawned = False
