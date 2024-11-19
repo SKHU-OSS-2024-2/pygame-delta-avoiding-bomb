@@ -81,7 +81,6 @@ def check_collision(person_mask, bomb_mask, offset):
 def check_get_heart(person_mask, heart_mask, offset):
     return person_mask.overlap(heart_mask, offset)
 
-
 # 모든 이미지 크기 조정
 person_idle_image = pygame.transform.scale(person_idle_image, (100, 100))
 person_left_images = [pygame.transform.scale(img, (100, 100)) for img in person_left_images]
@@ -265,7 +264,8 @@ def runGame():
 
             screen.blit(person_image, person)  # 캐릭터를 화면에 그림
 
-             #생명 충돌 검사 및 생명 증가
+            #생명 충돌 검사 및 생명 증가
+
             offset = (heart.left - person.left, heart.top - person.top)
             if person_dx == 0:
                 collision = check_collision(person_idle_mask, heart_mask, offset)
@@ -288,7 +288,7 @@ def runGame():
                 collision = check_collision(person_left_masks[animation_index], bomb_mask, offset)
             else:
                 collision = check_collision(person_right_masks[animation_index], bomb_mask, offset)
-
+            
             if collision:
                 bombs.remove(bomb)
                 rect = pygame.Rect(bomb_image.get_rect())
