@@ -46,46 +46,24 @@ bomb_image = pygame.image.load('bomb_game/img/bomb.png').convert_alpha()  # 알�
 # 생명 이미지 로드
 heart_image = pygame.image.load('bomb_game/img/heart.png').convert_alpha()
 
-# 캐릭터 마스크 생성 함수
+# 번개 이미지 로드
+fast_image = pygame.image.load('bomb_game/img/fast.png').convert_alpha()
+
+# 마스크 생성 함수
 def create_mask(image):
     surface = pygame.Surface(image.get_size(), pygame.SRCALPHA)
     surface.fill((0, 0, 0, 0))  # 투명한 배경 설정
     surface.blit(image, (0, 0))
     return pygame.mask.from_surface(surface)
 
+# 충돌 검사 함수
+def check_collision(person_mask, obj_mask, offset):
+    return person_mask.overlap(obj_mask, offset)
+
 # 캐릭터 마스크 생성 (맞춤형 히트박스)
 person_idle_mask = create_mask(person_idle_image)
 person_left_masks = [create_mask(img) for img in person_left_images]
 person_right_masks = [create_mask(img) for img in person_right_images]
-
-# 폭탄 마스크 생성 함수
-def create_bomb_mask(bomb_image):
-    surface = pygame.Surface(bomb_image.get_size(), pygame.SRCALPHA)
-    surface.fill((0, 0, 0, 0))  # 투명한 배경 설정
-    # 폭탄의 충돌 영역을 설정 (예: 폭탄 중앙 부분만 충돌)
-    surface.blit(bomb_image, (0, 0))
-    return pygame.mask.from_surface(surface)
-
-# 폭탄 마스크 생성
-bomb_mask = create_bomb_mask(bomb_image)
-
-#생명 마스크 생성 함수
-def create_heart_mask(heart_image):
-    surface = pygame.Surface(heart_image.get_size(), pygame.SRCALPHA)
-    surface.fill((0, 0, 0, 0))
-    surface.blit(heart_image, (0, 0))
-    return pygame.mask.from_surface(surface)
-
-#생명 마스크 생성
-heart_mask = create_heart_mask(heart_image)
-
-# 폭탄 충돌 검사 함수
-def check_collision(person_mask, bomb_mask, offset):
-    return person_mask.overlap(bomb_mask, offset)
-
-#하트 충돌 검사 함수
-def check_get_heart(person_mask, heart_mask, offset):
-    return person_mask.overlap(heart_mask, offset)
 
 # 모든 이미지 크기 조정
 person_idle_image = pygame.transform.scale(person_idle_image, (100, 100))
@@ -102,6 +80,9 @@ bomb_mask = pygame.mask.from_surface(bomb_image)
 
 # 생명 마스크 생성
 heart_mask = pygame.mask.from_surface(heart_image)
+
+#번개 마스크 생성
+fast_mask = pygame.mask.from_surface(fast_image)
 
 # 애니메이션 관련 변수
 animation_index = 0  # 현재 애니메이션 프레임 인덱스
@@ -149,7 +130,7 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
 def runGame(): 
 
     global done, game_over, lives, start_ticks, elapsed_time, animation_index, animation_timer
-    global heart_spawned, last_heart_time
+    global heart_spawned, last_heart_time, person_speed, fast_spawned, last_fast_time
 
     try:
         pygame.mixer.music.load(bgm_1)  # 첫 번째 음악을 로드
@@ -164,9 +145,16 @@ def runGame():
     heart_spawned = False # 화면에 하트가 존재하는가
     last_heart_time = 0 # 마지막 하트 생성 시간 기록
 
+    fast_spawned = False # 화면에 번개가 존재하는가
+    last_fast_time = 0 # 마지막 번개 생성 시간 기록
+
     heart_image = pygame.image.load('bomb_game/img/heart.png')
     heart_image = pygame.transform.scale(heart_image, (70, 70)) #생명 이미지 크기를 조절
     heart = pygame.Rect(heart_image.get_rect())
+
+    fast_image = pygame.image.load('bomb_game/img/fast.png')
+    fast_image = pygame.transform.scale(fast_image, (70, 91)) #번개 이미지 크기를 조절
+    fast = pygame.Rect(fast_image.get_rect())
 
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
     bomb_image = pygame.transform.scale(bomb_image, (70, 120))  # 폭탄 이미지 크기를 70x120으로 조절
@@ -187,6 +175,7 @@ def runGame():
     person.left = size[0] // 2 - person.width // 2  # 캐릭터를 화면 중앙에 배치
     person.top = size[1] - person.height  # 캐릭터를 화면 하단에 배치
     person_dx = 0  # 캐릭터의 초기 이동 속도 설정
+    person_speed = 5 # 캐릭터 이동속도 변수
     moving = False
 
     font = pygame.font.SysFont(None, 75)  # 게임오버 텍스트를 위한 폰트 설정
@@ -205,10 +194,10 @@ def runGame():
                 break
             elif event.type == pygame.KEYDOWN and not game_over:
                 if event.key == pygame.K_LEFT:
-                    person_dx = -5  # 왼쪽 키를 누르면 왼쪽으로 이동
+                    person_dx = - person_speed  # 왼쪽 키를 누르면 왼쪽으로 이동
                     moving = True
                 elif event.key == pygame.K_RIGHT:
-                    person_dx = 5  # 오른쪽 키를 누르면 오른쪽으로 이동
+                    person_dx = person_speed  # 오른쪽 키를 누르면 오른쪽으로 이동
                     moving = True
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -234,7 +223,7 @@ def runGame():
                     dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)  # 폭탄 낙하 속도를 무작위로 설정
                     bombs.append({'rect': rect, 'dy': dy})  # 새 폭탄 추가
 
-            #20초마다 떨어지는 생명 추가
+            #10초마다 떨어지는 생명 추가
             if not heart_spawned and (elapsed_time - last_heart_time) >= 10000:  # 10초마다 하트 생성
                 last_heart_time = elapsed_time  # 마지막 생성 시간 업데이트
                 heart = pygame.Rect(heart_image.get_rect())
@@ -248,6 +237,21 @@ def runGame():
                 if heart.top > size[1]:  # 화면 아래로 나가면
                     heart_spawned = False  # 다시 생성 가능하도록 설정
                     heart.top = -150
+
+            #13초마다 떨어지는 번개 추가
+            if not fast_spawned and (elapsed_time - last_fast_time) >= 13000:  # 13초마다 번개 생성
+                last_fast_time = elapsed_time  # 마지막 생성 시간 업데이트
+                fast = pygame.Rect(fast_image.get_rect())
+                fast.left = random.randint(0, size[0])  # 번개의 x좌표를 무작위로 설정
+                fast.top = -150  # 번개의 초기 y좌표 설정
+                fast_dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)  # 낙하 속도 설정
+                fast_spawned = True
+
+            if fast_spawned:
+                fast.top += fast_dy  # 번개를 아래로 이동
+                if fast.top > size[1]:  # 화면 아래로 나가면
+                    fast_spawned = False  # 다시 생성 가능하도록 설정
+                    fast.top = -150
 
             # 캐릭터 이동 처리
             person.left += person_dx  # 이동 속도를 현재 위치에 더함
@@ -271,7 +275,6 @@ def runGame():
             screen.blit(person_image, person)  # 캐릭터를 화면에 그림
 
             #생명 충돌 검사 및 생명 증가
-
             offset = (heart.left - person.left, heart.top - person.top)
             if person_dx == 0:
                 collision = check_collision(person_idle_mask, heart_mask, offset)
@@ -284,6 +287,24 @@ def runGame():
                 lives += 1
                 heart_spawned = False
                 heart.top = -150
+
+            #번개 충돌 검사 및 속도 증가
+            offset = (fast.left - person.left, fast.top - person.top)
+            if person_dx == 0:
+                collision = check_collision(person_idle_mask, fast_mask, offset)
+            elif person_dx < 0:
+                collision = check_collision(person_left_masks[animation_index], fast_mask, offset)
+            else:
+                collision = check_collision(person_right_masks[animation_index], fast_mask, offset)
+            
+            if collision:
+                print(f"Person position: {person.left}, {person.top}")
+                print(f"Fast position: {fast.left}, {fast.top}")
+                print(f"Offset: {offset}")
+                print(f"Collision detected: {collision}")
+                person_speed += 3
+                fast_spawned = False
+                fast.top = -150
 
         # 폭탄 충돌 검사 및 목숨 감소
         for bomb in bombs[:]:
@@ -302,7 +323,7 @@ def runGame():
                 rect.top = -100
                 dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)
                 bombs.append({'rect': rect, 'dy': dy})
-                lives -= 1
+                # lives -= 1
 
                 if lives <= 0:
                     pygame.mixer.music.stop()  # 기존 배경음악 정지
@@ -316,10 +337,16 @@ def runGame():
                     bombs.clear()   # 게임 오버 시 모든 폭탄 제거
                     heart.top = -150 # 게임 오버 시 떨어지고 있는 생명 제거
                     heart_spawned = False
+                    fast.top = -150 # 게임 오버 시 떨어지고 있는 번개 제거
+                    fast_spawned = False
             
             #생명그리기
             if heart_spawned == True:
                 screen.blit(heart_image, heart)
+
+            #번개그리기
+            if fast_spawned == True:
+                screen.blit(fast_image, fast)
 
             # 폭탄 그리기
             screen.blit(bomb_image, bomb['rect'])
