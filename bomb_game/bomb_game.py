@@ -21,8 +21,9 @@ screen = pygame.display.set_mode(size)
 bgm_1 = 'bomb_game/sound/BGM1.wav'
 bgm_2 = 'bomb_game/sound/BGM2.wav'
 bgm_3 = 'bomb_game/sound/BGM3.wav'
+bgm_4 = 'bomb_game/sound/BGM4.wav'
 
-#배경 이미리 로드
+#배경 이미지 로드
 background_img = pygame.image.load('bomb_game/img/background.jpg')
 
 # 캐릭터 애니메이션 이미지 로드
@@ -65,7 +66,6 @@ person_right_masks = [create_mask(img) for img in person_right_images]
 person_idle_image = pygame.transform.scale(person_idle_image, (100, 100))
 person_left_images = [pygame.transform.scale(img, (100, 100)) for img in person_left_images]
 person_right_images = [pygame.transform.scale(img, (100, 100)) for img in person_right_images]
-fast_image = pygame.transform.scale(fast_image, (70, 91))
 
 # 캐릭터 마스크 생성
 person_idle_mask = pygame.mask.from_surface(person_idle_image)
