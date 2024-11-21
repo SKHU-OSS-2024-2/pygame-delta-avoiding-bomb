@@ -23,10 +23,7 @@ bgm_2 = 'bomb_game/sound/BGM2.wav'
 bgm_3 = 'bomb_game/sound/BGM3.wav'
 bgm_4 = 'bomb_game/sound/BGM4.wav'
 
-# 배경 음악 소리 조절
-pygame.mixer.music.set_volume(0.3)
-
-#배경 이미리 로드
+#배경 이미지 로드
 background_img = pygame.image.load('bomb_game/img/background.jpg')
 
 # 캐릭터 애니메이션 이미지 로드
