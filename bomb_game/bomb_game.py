@@ -66,6 +66,7 @@ person_right_masks = [create_mask(img) for img in person_right_images]
 person_idle_image = pygame.transform.scale(person_idle_image, (100, 100))
 person_left_images = [pygame.transform.scale(img, (100, 100)) for img in person_left_images]
 person_right_images = [pygame.transform.scale(img, (100, 100)) for img in person_right_images]
+fast_image = pygame.transform.scale(fast_image, (70, 91))
 
 # 캐릭터 마스크 생성
 person_idle_mask = pygame.mask.from_surface(person_idle_image)
