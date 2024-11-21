@@ -3,7 +3,6 @@ import random
 import os
 
 pygame.init()  # pygame 초기화
-pygame.mixer.init() # pygame mixer 초기화 (배경 음악)
 
 try:
     pygame.mixer.init() # pygame mixer 초기화 (배경 음악)
@@ -23,9 +22,6 @@ bgm_1 = 'bomb_game/sound/BGM1.wav'
 bgm_2 = 'bomb_game/sound/BGM2.wav'
 bgm_3 = 'bomb_game/sound/BGM3.wav'
 bgm_4 = 'bomb_game/sound/BGM4.wav'
-
-# 배경 음악 소리 조절
-pygame.mixer.music.set_volume(0.3)
 
 # 캐릭터 애니메이션 이미지 로드
 person_idle_image = pygame.image.load('bomb_game/img/person_idle.png').convert_alpha()  # 알파 채널 활성화
@@ -167,7 +163,7 @@ def runGame():
     heart = pygame.Rect(heart_image.get_rect())
 
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
-    bomb_image = pygame.transform.scale(bomb_image, (70, 120))  # 폭탄 이미지 크기를 50x75으로 조절
+    bomb_image = pygame.transform.scale(bomb_image, (70, 120))  # 폭탄 이미지 크기를 70x120으로 조절
     bombs = []  # 폭탄 정보를 담을 리스트 초기화
 
     # 초기 폭탄 5개 생성
@@ -269,6 +265,7 @@ def runGame():
             screen.blit(person_image, person)  # 캐릭터를 화면에 그림
 
             #생명 충돌 검사 및 생명 증가
+
             offset = (heart.left - person.left, heart.top - person.top)
             if person_dx == 0:
                 collision = check_collision(person_idle_mask, heart_mask, offset)
@@ -305,7 +302,9 @@ def runGame():
                     pygame.mixer.music.stop()  # 기존 배경음악 정지
                     pygame.mixer.music.load(bgm_3)  # 게임 종료 음악 로드
                     pygame.mixer.music.play()  # 게임 종료 음악 재생
+                    pygame.mixer.music.set_volume(1.5)
                     pygame.mixer.music.queue(bgm_4)  # bgm_3 종료 후 bgm_4 재생 대기열에 추가
+                    pygame.mixer.music.set_volume(0.5)
                     game_over = True
                     game_over_time = (pygame.time.get_ticks() - start_ticks) / 1000
                     bombs.clear()   # 게임 오버 시 모든 폭탄 제거
@@ -315,7 +314,7 @@ def runGame():
             #생명그리기
             if heart_spawned == True:
                 screen.blit(heart_image, heart)
-            
+
             # 폭탄 그리기
             screen.blit(bomb_image, bomb['rect'])
 
