@@ -158,6 +158,11 @@ def runGame():
     bomb_image = pygame.transform.scale(bomb_image, (70, 120))  # 폭탄 이미지 크기를 70x120으로 조절
     bombs = []  # 폭탄 정보를 담을 리스트 초기화
 
+    # 대각선 폭탄 관련 변수
+    diagonal_bombs = []  # 대각선 폭탄 정보를 담을 리스트
+    last_diagonal_bomb_time = 0  # 마지막 대각선 폭탄 생성 시간
+    diagonal_bomb_interval = random.randint(3000, 5000)  # 3초~5초 사이 간격
+
     # 초기 폭탄 5개 생성
     for i in range(5):
         rect = pygame.Rect(bomb_image.get_rect())  # 폭탄 이미지 크기와 위치 설정
@@ -221,6 +226,22 @@ def runGame():
                     dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)  # 폭탄 낙하 속도를 무작위로 설정
                     bombs.append({'rect': rect, 'dy': dy})  # 새 폭탄 추가
 
+            # 대각선 폭탄 이동 및 화면 갱신
+            for bomb in diagonal_bombs[:]:
+                bomb['rect'].top += bomb['dy']  # 아래로 이동
+                bomb['rect'].left += bomb['dx']  # 좌우로 이동
+
+                # 벽에 닿으면 x축 방향 반전
+                if bomb['rect'].left <= 0 or bomb['rect'].right >= size[0]:
+                    bomb['dx'] = -bomb['dx']
+
+                # 화면 밖으로 나가면 삭제
+                if bomb['rect'].top > size[1]:
+                    diagonal_bombs.remove(bomb)
+                else:
+                    screen.blit(bomb_image, bomb['rect'])  # 화면에 그리기
+
+
             #10초마다 떨어지는 생명 추가
             if not heart_spawned and (elapsed_time - last_heart_time) >= 10000:  # 10초마다 하트 생성
                 last_heart_time = elapsed_time  # 마지막 생성 시간 업데이트
@@ -250,6 +271,20 @@ def runGame():
                 if fast.top > size[1]:  # 화면 아래로 나가면
                     fast_spawned = False  # 다시 생성 가능하도록 설정
                     fast.top = -150
+
+            # 대각선 폭탄 생성
+            if elapsed_time - last_diagonal_bomb_time > diagonal_bomb_interval:
+                last_diagonal_bomb_time = elapsed_time  # 타이머 초기화
+                diagonal_bomb_interval = random.randint(3000, 5000)  # 새 간격 설정
+
+                # 대각선 폭탄 추가
+                rect = pygame.Rect(bomb_image.get_rect())
+                rect.left = random.randint(0, size[0] - rect.width)  # 화면의 랜덤 위치
+                rect.top = -100  # 화면 위에서 시작
+                dx = random.choice([-4, 4])  # 왼쪽(-) 또는 오른쪽(+) 방향
+                dy = random.randint(5, 10)
+                diagonal_bombs.append({'rect': rect, 'dx': dx, 'dy': dy})
+
 
             # 캐릭터 이동 처리
             person.left += person_dx  # 이동 속도를 현재 위치에 더함
@@ -303,6 +338,23 @@ def runGame():
                 person_speed += 3
                 fast_spawned = False
                 fast.top = -150
+                
+        # 대각선 폭탄 충돌 검사
+        for bomb in diagonal_bombs[:]:
+            offset = (bomb['rect'].left - person.left, bomb['rect'].top - person.top)
+            if person_dx == 0:
+                collision = check_collision(person_idle_mask, bomb_mask, offset)
+            elif person_dx < 0:
+                collision = check_collision(person_left_masks[animation_index], bomb_mask, offset)
+            else:
+                collision = check_collision(person_right_masks[animation_index], bomb_mask, offset)
+
+            if collision:
+                diagonal_bombs.remove(bomb)
+                # 목숨 감소 로직
+                lives -= 1
+                if lives <= 0:
+                    game_over = True
 
         # 폭탄 충돌 검사 및 목숨 감소
         for bomb in bombs[:]:
