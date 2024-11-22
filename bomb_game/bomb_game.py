@@ -168,7 +168,7 @@ def runGame():
         rect = pygame.Rect(bomb_image.get_rect())  # 폭탄 이미지 크기와 위치 설정
         rect.left = random.randint(0, size[0])  # 폭탄의 x 좌표를 무작위로 설정
         rect.top = -100  # 폭탄의 초기 y 좌표 설정
-        dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)  # 폭탄 낙하 속도를 무작위로 설정
+        dy = random.randint(3 + elapsed_time // 5000, 7 + elapsed_time // 5000)  # 폭탄 낙하 속도를 무작위로 설정
         bombs.append({'rect': rect, 'dy': dy})  # 폭탄 정보를 리스트에 추가
 
     # 캐릭터 이미지 불러오기 및 초기 위치 설정
@@ -223,7 +223,7 @@ def runGame():
                     rect = pygame.Rect(bomb_image.get_rect())
                     rect.left = random.randint(0, size[0])  # 새 폭탄의 x 좌표를 무작위로 설정
                     rect.top = -100  # 새 폭탄의 y 좌표 초기화
-                    dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)  # 폭탄 낙하 속도를 무작위로 설정
+                    dy = random.randint(3 + elapsed_time // 5000, 7 + elapsed_time // 5000)  # 폭탄 낙하 속도를 무작위로 설정
                     bombs.append({'rect': rect, 'dy': dy})  # 새 폭탄 추가
 
             # 대각선 폭탄 이동 및 화면 갱신
@@ -371,7 +371,7 @@ def runGame():
                 rect = pygame.Rect(bomb_image.get_rect())
                 rect.left = random.randint(0, size[0])
                 rect.top = -100
-                dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)
+                dy = random.randint(3 + elapsed_time // 5000, 7 + elapsed_time // 5000)
                 bombs.append({'rect': rect, 'dy': dy})
                 # lives -= 1
 
