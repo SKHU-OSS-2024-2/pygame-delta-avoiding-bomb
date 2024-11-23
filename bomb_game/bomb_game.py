@@ -40,6 +40,17 @@ person_right_images = [
 # 폭탄 이미지 로드
 bomb_image = pygame.image.load('bomb_game/img/bomb.png').convert_alpha()  # 알파 채널 활성화
 
+# 특성 폭탄 이미지 로드 및 크기 조정
+slow_bomb_image = pygame.transform.scale(
+    pygame.image.load('bomb_game/img/slow_bomb.png').convert_alpha(),
+    (70, 120)  # 크기 조정
+)
+
+damage_bomb_image = pygame.transform.scale(
+    pygame.image.load('bomb_game/img/damage_bomb.png').convert_alpha(),
+    (70, 120)  # 크기 조정
+)
+
 # 생명 이미지 로드
 heart_image = pygame.image.load('bomb_game/img/heart.png').convert_alpha()
 
@@ -71,6 +82,9 @@ person_left_images = [pygame.transform.scale(img, (100, 100)) for img in person_
 person_right_images = [pygame.transform.scale(img, (100, 100)) for img in person_right_images]
 fast_image = pygame.transform.scale(fast_image, (70, 91))
 clock_image = pygame.transform.scale(clock_image, (70, 70))
+slow_image = pygame.transform.scale(slow_bomb_image,(70, 90))
+damage_image = pygame.transform.scale(damage_bomb_image, (70, 90))
+
 
 # 캐릭터 마스크 생성
 person_idle_mask = pygame.mask.from_surface(person_idle_image)
@@ -88,6 +102,10 @@ fast_mask = pygame.mask.from_surface(fast_image)
 
 #시계 마스크 생성
 clock_mask = pygame.mask.from_surface(clock_image)
+
+#특성 폭탄 마스크 생성
+slow_mask = create_mask(slow_image)
+damage_mask = create_mask(damage_image)
 
 # 애니메이션 관련 변수
 animation_index = 0  # 현재 애니메이션 프레임 인덱스
@@ -167,7 +185,7 @@ def runGame():
 
     fast_image = pygame.image.load('bomb_game/img/fast.png')
     fast_image = pygame.transform.scale(fast_image, (70, 91)) #번개 이미지 크기를 조절
-    fast = pygame.Rect(fast_image.get_rect())
+    fast = pygame.Rect(fast_image.get_rect())    
 
     clock_image = pygame.image.load('bomb_game/img/Clock.png')
     clock_image = pygame.transform.scale(clock_image, (70, 70))  # 시계 크기 조정
@@ -181,9 +199,14 @@ def runGame():
     diagonal_bombs = []  # 대각선 폭탄 정보를 담을 리스트
     last_diagonal_bomb_time = 0  # 마지막 대각선 폭탄 생성 시간
     diagonal_bomb_interval = random.randint(3000, 5000)  # 3초~5초 사이 간격
+    
+    # 특성 폭탄 관련 변수
+    special_bombs = []
+    special_bomb_interval = random.randint(7000, 10000) # 7~10초 사이 간격
+    last_special_bomb_time = 0
 
     # 초기 폭탄 5개 생성
-    for i in range(5):
+    for i in range(4):
         rect = pygame.Rect(bomb_image.get_rect())  # 폭탄 이미지 크기와 위치 설정
         rect.left = random.randint(0, size[0])  # 폭탄의 x 좌표를 무작위로 설정
         rect.top = -100  # 폭탄의 초기 y 좌표 설정
@@ -319,6 +342,49 @@ def runGame():
                 dy = random.randint(5, 10)
                 diagonal_bombs.append({'rect': rect, 'dx': dx, 'dy': dy})
 
+            # 특성 폭탄 생성
+            if elapsed_time - last_special_bomb_time > special_bomb_interval:
+                last_special_bomb_time = elapsed_time
+                special_bomb_interval = random.randint(7000, 10000)
+
+                bomb_type = random.choice(["slow", "damage"])
+                image = slow_bomb_image if bomb_type == "slow" else damage_bomb_image  # 크기 조정된 이미지 사용
+
+                rect = image.get_rect()  # 선택된 이미지 기준으로 Rect 생성
+                rect.left = random.randint(0, size[0] - rect.width)
+                rect.top = -100
+                dy = random.randint(4, 8)
+
+                special_bombs.append({'rect': rect, 'dy': dy, 'type': bomb_type, 'image': image})
+
+            # 특성 폭탄 이동 및 그리기
+            for bomb in special_bombs[:]:
+                bomb['rect'].top += bomb['dy']
+                if bomb['rect'].top > size[1]:
+                    special_bombs.remove(bomb)
+                else:
+                    screen.blit(bomb['image'], bomb['rect'])  # 크기 조정된 이미지를 화면에 그림
+
+
+            # 특성 폭탄 충돌 처리
+            for bomb in special_bombs[:]:
+                offset = (bomb['rect'].left - person.left + 10, bomb['rect'].top - person.top + 10)
+                if person_dx == 0:
+                    collision = check_collision(person_idle_mask, bomb['type'] == "slow" and slow_mask or damage_mask, offset)
+                elif person_dx < 0:
+                    collision = check_collision(person_left_masks[animation_index], bomb['type'] == "slow" and slow_mask or damage_mask, offset)
+                else:
+                    collision = check_collision(person_right_masks[animation_index], bomb['type'] == "slow" and slow_mask or damage_mask, offset)
+
+
+                if collision:
+                    if bomb['type'] == "slow":
+                        person_speed = max(person_speed - 0.2, 0.2)
+                    elif bomb['type'] == "damage":
+                        lives -= 2
+                        if lives <= 0:
+                            game_over = True
+                    special_bombs.remove(bomb)
 
             # 캐릭터 이동 처리
             person.left += person_dx  # 이동 속도를 현재 위치에 더함
@@ -404,7 +470,7 @@ def runGame():
                 
         # 대각선 폭탄 충돌 검사
         for bomb in diagonal_bombs[:]:
-            offset = (bomb['rect'].left - person.left, bomb['rect'].top - person.top)
+            offset = (bomb['rect'].left - person.left - 30, bomb['rect'].top - person.top - 30)
             if person_dx == 0:
                 collision = check_collision(person_idle_mask, bomb_mask, offset)
             elif person_dx < 0:
@@ -421,7 +487,7 @@ def runGame():
 
         # 폭탄 충돌 검사 및 목숨 감소
         for bomb in bombs[:]:
-            offset = (bomb['rect'].left - person.left, bomb['rect'].top - person.top)
+            offset = (bomb['rect'].left - person.left - 30, bomb['rect'].top - person.top - 30)
             if person_dx == 0:
                 collision = check_collision(person_idle_mask, bomb_mask, offset)
             elif person_dx < 0:
