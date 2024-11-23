@@ -46,6 +46,9 @@ heart_image = pygame.image.load('bomb_game/img/heart.png').convert_alpha()
 # 번개 이미지 로드
 fast_image = pygame.image.load('bomb_game/img/fast.png').convert_alpha()
 
+# 시계 이미지 로드
+clock_image = pygame.image.load('bomb_game/img/Clock.png').convert_alpha()
+
 # 마스크 생성 함수
 def create_mask(image):
     surface = pygame.Surface(image.get_size(), pygame.SRCALPHA)
@@ -67,6 +70,7 @@ person_idle_image = pygame.transform.scale(person_idle_image, (100, 100))
 person_left_images = [pygame.transform.scale(img, (100, 100)) for img in person_left_images]
 person_right_images = [pygame.transform.scale(img, (100, 100)) for img in person_right_images]
 fast_image = pygame.transform.scale(fast_image, (70, 91))
+clock_image = pygame.transform.scale(clock_image, (70, 70))
 
 # 캐릭터 마스크 생성
 person_idle_mask = pygame.mask.from_surface(person_idle_image)
@@ -81,6 +85,9 @@ heart_mask = pygame.mask.from_surface(heart_image)
 
 #번개 마스크 생성
 fast_mask = pygame.mask.from_surface(fast_image)
+
+#시계 마스크 생성
+clock_mask = pygame.mask.from_surface(clock_image)
 
 # 애니메이션 관련 변수
 animation_index = 0  # 현재 애니메이션 프레임 인덱스
@@ -126,9 +133,11 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
 
 # 게임 실행 함수 정의
 def runGame(): 
-
+  
     global done, game_over, lives, start_ticks, elapsed_time, animation_index, animation_timer
     global heart_spawned, last_heart_time, person_speed, fast_spawned, last_fast_time
+    global clock_spawned, last_clock_time, slow_effect_active, slow_effect_end_time
+
 
     try:
         pygame.mixer.music.load(bgm_1)  # 첫 번째 음악을 로드
@@ -146,6 +155,12 @@ def runGame():
     fast_spawned = False # 화면에 번개가 존재하는가
     last_fast_time = 0 # 마지막 번개 생성 시간 기록
 
+    clock_spawned = False # 화면에 시계가 존재하는가
+    last_clock_time = 0 # 마지막 시계 생성 시간 기록
+
+    slow_effect_active = False  # 폭탄 속도 감소 효과 활성화 여부
+    slow_effect_end_time = 0  # 효과 종료 시간
+
     heart_image = pygame.image.load('bomb_game/img/heart.png')
     heart_image = pygame.transform.scale(heart_image, (70, 70)) #생명 이미지 크기를 조절
     heart = pygame.Rect(heart_image.get_rect())
@@ -153,6 +168,10 @@ def runGame():
     fast_image = pygame.image.load('bomb_game/img/fast.png')
     fast_image = pygame.transform.scale(fast_image, (70, 91)) #번개 이미지 크기를 조절
     fast = pygame.Rect(fast_image.get_rect())
+
+    clock_image = pygame.image.load('bomb_game/img/Clock.png')
+    clock_image = pygame.transform.scale(clock_image, (70, 70))  # 시계 크기 조정
+    clock_rect = pygame.Rect(clock_image.get_rect())  # 시계 위치 및 크기 설정
 
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
     bomb_image = pygame.transform.scale(bomb_image, (70, 120))  # 폭탄 이미지 크기를 70x120으로 조절
@@ -272,6 +291,21 @@ def runGame():
                     fast_spawned = False  # 다시 생성 가능하도록 설정
                     fast.top = -150
 
+            #15초마다 떨어지는 시계 추가    
+            if not clock_spawned and (elapsed_time - last_clock_time) >= 15000:  # 15초마다 시계 생성
+                last_clock_time = elapsed_time  # 마지막 생성 시간 갱신
+                clock_rect = pygame.Rect(clock_image.get_rect())
+                clock_rect.left = random.randint(0, size[0] - clock_rect.width)  # x 좌표 무작위 설정
+                clock_rect.top = -150  # y 좌표 초기화
+                clock_dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)  # 낙하 속도 설정
+                clock_spawned = True
+
+            if clock_spawned:
+                clock_rect.top += clock_dy
+                if clock_rect.top > size[1]:  # 화면 아래로 나가면 다시 생성 가능
+                    clock_spawned = False
+
+            
             # 대각선 폭탄 생성
             if elapsed_time - last_diagonal_bomb_time > diagonal_bomb_interval:
                 last_diagonal_bomb_time = elapsed_time  # 타이머 초기화
@@ -338,6 +372,35 @@ def runGame():
                 person_speed += 3
                 fast_spawned = False
                 fast.top = -150
+
+        # 시계와 충돌 감지
+        offset = (clock_rect.left - person.left, clock_rect.top - person.top)
+        if person_dx == 0:
+            collision = check_collision(person_idle_mask, clock_mask, offset)
+        elif person_dx < 0:
+            collision = check_collision(person_left_masks[animation_index], clock_mask, offset)
+        else:
+            collision = check_collision(person_right_masks[animation_index], clock_mask, offset)
+
+        if collision:
+            slow_effect_active = True  # 폭탄 속도 감소 효과 활성화
+            slow_effect_end_time = pygame.time.get_ticks() + 4000  # 4초 동안 효과 지속
+            clock_spawned = False  # 시계 사라짐
+
+         # 폭탄 속도 감소 효과 종료
+        if slow_effect_active and pygame.time.get_ticks() > slow_effect_end_time:
+            slow_effect_active = False  # 효과 종료
+
+        for bomb in bombs:
+            bomb_speed = bomb['dy'] // 4 if slow_effect_active else bomb['dy']  # 효과 적용 시 속도 감소
+            bomb['rect'].top += bomb_speed
+            if bomb['rect'].top > size[1]:  # 화면 아래로 나가면 새로운 폭탄 추가
+                bombs.remove(bomb)
+                rect = pygame.Rect(bomb_image.get_rect())
+                rect.left = random.randint(0, size[0] - rect.width)
+                rect.top = -100
+                dy = random.randint(3 + elapsed_time // 5000, 7 + elapsed_time // 5000)
+                bombs.append({'rect': rect, 'dy': dy})
                 
         # 대각선 폭탄 충돌 검사
         for bomb in diagonal_bombs[:]:
@@ -401,6 +464,10 @@ def runGame():
             #번개그리기
             if fast_spawned == True:
                 screen.blit(fast_image, fast)
+
+            #시계그리기
+            if clock_spawned:
+                screen.blit(clock_image, clock_rect)
 
             # 폭탄 그리기
             screen.blit(bomb_image, bomb['rect'])
