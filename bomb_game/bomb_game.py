@@ -373,8 +373,8 @@ def runGame():
                 rect.top = -100
                 dy = random.randint(3 + elapsed_time // 5000, 7 + elapsed_time // 5000)
                 bombs.append({'rect': rect, 'dy': dy})
-                # lives -= 1
-
+                lives -= 1 
+                
                 if lives <= 0:
                     try:
                         pygame.mixer.music.stop()  # 기존 배경음악 정지
