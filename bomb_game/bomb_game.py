@@ -385,7 +385,7 @@ def runGame():
                         pygame.mixer.music.set_volume(0.5)
                     except pygame.error as e:
                         print("재생 장치 관련 오류로 인해 게임 종료 음악이 나오지 않습니다.")
-                    print(f"{e}")
+                        print(f"{e}")
                     game_over = True
                     game_over_time = (pygame.time.get_ticks() - start_ticks) / 1000
                     bombs.clear()   # 게임 오버 시 모든 폭탄 제거
