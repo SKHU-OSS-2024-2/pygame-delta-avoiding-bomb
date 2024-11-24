@@ -60,6 +60,9 @@ fast_image = pygame.image.load('bomb_game/img/fast.png').convert_alpha()
 # 시계 이미지 로드
 clock_image = pygame.image.load('bomb_game/img/Clock.png').convert_alpha()
 
+# 스타 이미지 로드
+star_image = pygame.image.load('bomb_game/img/star.png').convert_alpha()
+
 # 마스크 생성 함수
 def create_mask(image):
     surface = pygame.Surface(image.get_size(), pygame.SRCALPHA)
@@ -102,6 +105,9 @@ fast_mask = pygame.mask.from_surface(fast_image)
 
 #시계 마스크 생성
 clock_mask = pygame.mask.from_surface(clock_image)
+
+# 스타 마스크 생성
+star_mask = pygame.mask.from_surface(star_image)
 
 #특성 폭탄 마스크 생성
 slow_mask = create_mask(slow_image)
@@ -153,8 +159,11 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
 def runGame(): 
   
     global done, game_over, lives, start_ticks, elapsed_time, animation_index, animation_timer
-    global heart_spawned, last_heart_time, person_speed, fast_spawned, last_fast_time
+    global heart_spawned, last_heart_time, person_speed, fast_spawned, last_fast_time, star_spawned, last_star_time
     global clock_spawned, last_clock_time, slow_effect_active, slow_effect_end_time
+    global invincible, invincible_start_time
+    invincible = False
+    invincible_start_time = 0
 
 
     try:
@@ -176,6 +185,9 @@ def runGame():
     clock_spawned = False # 화면에 시계가 존재하는가
     last_clock_time = 0 # 마지막 시계 생성 시간 기록
 
+    star_spawned = False # 화면에 스타가 존재하는가
+    last_star_time = 0 # 마지막 스타 생성 시간 기록
+
     slow_effect_active = False  # 폭탄 속도 감소 효과 활성화 여부
     slow_effect_end_time = 0  # 효과 종료 시간
 
@@ -190,6 +202,10 @@ def runGame():
     clock_image = pygame.image.load('bomb_game/img/Clock.png')
     clock_image = pygame.transform.scale(clock_image, (70, 70))  # 시계 크기 조정
     clock_rect = pygame.Rect(clock_image.get_rect())  # 시계 위치 및 크기 설정
+
+    star_image = pygame.image.load('bomb_game/img/star.png')
+    star_image = pygame.transform.scale(star_image, (70, 70)) #스타 이미지 크기를 조절
+    star = pygame.Rect(star_image.get_rect())
 
     bomb_image = pygame.image.load('bomb_game/img/bomb.png')  # 폭탄 이미지 파일을 불러옴
     bomb_image = pygame.transform.scale(bomb_image, (70, 120))  # 폭탄 이미지 크기를 70x120으로 조절
@@ -298,6 +314,21 @@ def runGame():
                 if heart.top > size[1]:  # 화면 아래로 나가면
                     heart_spawned = False  # 다시 생성 가능하도록 설정
                     heart.top = -150
+
+            #20초마다 떨어지는 스타 추가
+            if not star_spawned and (elapsed_time - last_star_time) >= 20000:  # 10초마다 하트 생성
+                last_star_time = elapsed_time  # 마지막 생성 시간 업데이트
+                star = pygame.Rect(heart_image.get_rect())
+                star.left = random.randint(0, size[0])  # 하트의 x좌표를 무작위로 설정
+                star.top = -150  # 하트의 초기 y좌표 설정
+                star_dy = random.randint(3 + elapsed_time // 2000, 9 + elapsed_time // 2000)  # 낙하 속도 설정
+                star_spawned = True
+
+            if star_spawned:
+                star.top += star_dy  # 하트를 아래로 이동
+                if star.top > size[1]:  # 화면 아래로 나가면
+                    star_spawned = False  # 다시 생성 가능하도록 설정
+                    star.top = -150
 
             #13초마다 떨어지는 번개 추가
             if not fast_spawned and (elapsed_time - last_fast_time) >= 13000:  # 13초마다 번개 생성
@@ -421,6 +452,26 @@ def runGame():
                 heart_spawned = False
                 heart.top = -150
 
+            #스타 충돌 검사 
+            offset = (star.left - person.left, star.top - person.top)
+            if person_dx == 0:
+                collision = check_collision(person_idle_mask, star_mask, offset)
+            elif person_dx < 0:
+                collision = check_collision(person_left_masks[animation_index], star_mask, offset)
+            else:
+                collision = check_collision(person_right_masks[animation_index], star_mask, offset)
+            
+            if collision:
+                invincible = True
+                invincible_start_time = pygame.time.get_ticks()
+                star_spawned = False
+                star.top = -150
+
+            # 무적 상태 확인 및 해제
+            current_time = pygame.time.get_ticks()
+            if invincible and current_time - invincible_start_time > 5000:  
+                invincible = False
+
             #번개 충돌 검사 및 속도 증가
             offset = (fast.left - person.left, fast.top - person.top)
             if person_dx == 0:
@@ -495,7 +546,7 @@ def runGame():
             else:
                 collision = check_collision(person_right_masks[animation_index], bomb_mask, offset)
             
-            if collision:
+            if collision and not invincible:
                 bombs.remove(bomb)
                 rect = pygame.Rect(bomb_image.get_rect())
                 rect.left = random.randint(0, size[0])
@@ -520,12 +571,18 @@ def runGame():
                     bombs.clear()   # 게임 오버 시 모든 폭탄 제거
                     heart.top = -150 # 게임 오버 시 떨어지고 있는 생명 제거
                     heart_spawned = False
+                    star.top = -150 # 게임 오버 시 떨어지고 있는 스타 제거
+                    star_spawned = False
                     fast.top = -150 # 게임 오버 시 떨어지고 있는 번개 제거
                     fast_spawned = False
             
             #생명그리기
             if heart_spawned == True:
                 screen.blit(heart_image, heart)
+
+            #스타그리기
+            if star_spawned == True:
+                screen.blit(star_image, star)
 
             #번개그리기
             if fast_spawned == True:
