@@ -23,6 +23,9 @@ bgm_2 = 'bomb_game/sound/BGM2.wav'
 bgm_3 = 'bomb_game/sound/BGM3.wav'
 bgm_4 = 'bomb_game/sound/BGM4.wav'
 
+#font 로드
+fontObj = pygame.font.Font()
+
 #배경 이미지 로드
 background_img = pygame.image.load('bomb_game/img/background.jpg')
 
@@ -222,7 +225,7 @@ def runGame():
     last_special_bomb_time = 0
 
     # 초기 폭탄 5개 생성
-    for i in range(4):
+    for i in range(3):
         rect = pygame.Rect(bomb_image.get_rect())  # 폭탄 이미지 크기와 위치 설정
         rect.left = random.randint(0, size[0])  # 폭탄의 x 좌표를 무작위로 설정
         rect.top = -100  # 폭탄의 초기 y 좌표 설정
@@ -410,12 +413,33 @@ def runGame():
 
                 if collision:
                     if bomb['type'] == "slow":
+                        special_bombs.remove(bomb)
                         person_speed = max(person_speed - 0.2, 0.2)
                     elif bomb['type'] == "damage":
+                        special_bombs.remove(bomb)
                         lives -= 2
                         if lives <= 0:
+                            try:
+                                pygame.mixer.music.stop()  # 기존 배경음악 정지
+                                pygame.mixer.music.load(bgm_3)  # 게임 종료 음악 로드
+                                pygame.mixer.music.play()  # 게임 종료 음악 재생
+                                pygame.mixer.music.set_volume(1.5)
+                                pygame.mixer.music.queue(bgm_4)  # bgm_3 종료 후 bgm_4 재생 대기열에 추가
+                                pygame.mixer.music.set_volume(0.5)
+                            except pygame.error as e:
+                                print("재생 장치 관련 오류로 인해 게임 종료 음악이 나오지 않습니다.")
+                                print(f"{e}")
                             game_over = True
-                    special_bombs.remove(bomb)
+                            game_over_time = (pygame.time.get_ticks() - start_ticks) / 1000
+                            bombs.clear()   # 게임 오버 시 모든 폭탄 제거
+                            heart.top = -150 # 게임 오버 시 떨어지고 있는 생명 제거
+                            heart_spawned = False
+                            star.top = -150 # 게임 오버 시 떨어지고 있는 스타 제거
+                            star_spawned = False
+                            fast.top = -150 # 게임 오버 시 떨어지고 있는 번개 제거
+                            fast_spawned = False
+                            if bomb in diagonal_bombs:
+                                diagonal_bombs.remove(bomb)
 
             # 캐릭터 이동 처리
             person.left += person_dx  # 이동 속도를 현재 위치에 더함
@@ -534,7 +558,27 @@ def runGame():
                 # 목숨 감소 로직
                 lives -= 1
                 if lives <= 0:
+                    try:
+                        pygame.mixer.music.stop()  # 기존 배경음악 정지
+                        pygame.mixer.music.load(bgm_3)  # 게임 종료 음악 로드
+                        pygame.mixer.music.play()  # 게임 종료 음악 재생
+                        pygame.mixer.music.set_volume(1.5)
+                        pygame.mixer.music.queue(bgm_4)  # bgm_3 종료 후 bgm_4 재생 대기열에 추가
+                        pygame.mixer.music.set_volume(0.5)
+                    except pygame.error as e:
+                        print("재생 장치 관련 오류로 인해 게임 종료 음악이 나오지 않습니다.")
+                        print(f"{e}")
                     game_over = True
+                    game_over_time = (pygame.time.get_ticks() - start_ticks) / 1000
+                    bombs.clear()   # 게임 오버 시 모든 폭탄 제거
+                    heart.top = -150 # 게임 오버 시 떨어지고 있는 생명 제거
+                    heart_spawned = False
+                    star.top = -150 # 게임 오버 시 떨어지고 있는 스타 제거
+                    star_spawned = False
+                    fast.top = -150 # 게임 오버 시 떨어지고 있는 번개 제거
+                    fast_spawned = False
+                    if bomb in special_bombs:
+                        special_bombs.remove(bomb)
 
         # 폭탄 충돌 검사 및 목숨 감소
         for bomb in bombs[:]:
@@ -575,6 +619,10 @@ def runGame():
                     star_spawned = False
                     fast.top = -150 # 게임 오버 시 떨어지고 있는 번개 제거
                     fast_spawned = False
+                    if bomb in special_bombs:
+                        special_bombs.remove(bomb)
+                    if bomb in diagonal_bombs:
+                        diagonal_bombs.remove(bomb)
             
             #생명그리기
             if heart_spawned == True:
