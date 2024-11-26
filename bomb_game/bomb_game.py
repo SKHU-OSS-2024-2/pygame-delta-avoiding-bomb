@@ -287,20 +287,26 @@ def runGame():
                     dy = random.randint(3 + elapsed_time // 5000, 7 + elapsed_time // 5000)  # 폭탄 낙하 속도를 무작위로 설정
                     bombs.append({'rect': rect, 'dy': dy})  # 새 폭탄 추가
 
-            # 대각선 폭탄 이동 및 화면 갱신
+            # 대각선 폭탄 이동 및 그리기
             for bomb in diagonal_bombs[:]:
-                bomb['rect'].top += bomb['dy']  # 아래로 이동
-                bomb['rect'].left += bomb['dx']  # 좌우로 이동
+                # 폭탄 위치 업데이트
+                bomb['rect'].left += bomb['dx']
+                bomb['rect'].top += bomb['dy']
 
-                # 벽에 닿으면 x축 방향 반전
-                if bomb['rect'].left <= 0 or bomb['rect'].right >= size[0]:
-                    bomb['dx'] = -bomb['dx']
+                # 오른쪽 벽에 닿으면 왼쪽으로 이동
+                if bomb['rect'].left > size[0]:
+                    bomb['rect'].left = 0 - bomb['rect'].width  # 왼쪽으로 넘어감
 
-                # 화면 밖으로 나가면 삭제
+                # 왼쪽 벽에 닿으면 오른쪽으로 이동
+                elif bomb['rect'].left + bomb['rect'].width < 0:
+                    bomb['rect'].left = size[0]  # 오른쪽으로 넘어감
+
+                # 폭탄이 화면 아래로 나가면 제거
                 if bomb['rect'].top > size[1]:
                     diagonal_bombs.remove(bomb)
                 else:
-                    screen.blit(bomb_image, bomb['rect'])  # 화면에 그리기
+                    # 폭탄을 화면에 그리기
+                    screen.blit(bomb_image, bomb['rect'])
 
 
             #10초마다 떨어지는 생명 추가
@@ -443,10 +449,10 @@ def runGame():
 
             # 캐릭터 이동 처리
             person.left += person_dx  # 이동 속도를 현재 위치에 더함
-            if person.left < 0:  # 화면 왼쪽을 넘어가지 않도록
-                person.left = 0
-            elif person.left > size[0] - person.width:  # 화면 오른쪽을 넘어가지 않도록
-                person.left = size[0] - person.width
+            if person.left < -80:  # 화면 왼쪽을 넘어가지 않도록
+                person.left = size[0] - person.width + 70
+            elif person.left > size[0] - person.width + 80:  # 화면 오른쪽을 넘어가지 않도록
+                person.left = - 70
                 
             if moving:
                 animation_timer += animation_speed
