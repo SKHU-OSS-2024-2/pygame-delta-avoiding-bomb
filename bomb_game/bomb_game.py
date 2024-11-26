@@ -69,6 +69,11 @@ star_image = pygame.image.load('bomb_game/img/star.png').convert_alpha()
 #gameover 이미지 로드
 gameover_image = pygame.image.load('bomb_game/img/gameover.png').convert_alpha()
 
+#mainlogo 이미지 로드
+mainlogo_image = pygame.image.load('bomb_game/img/mainlogo.png').convert_alpha()
+
+mainlogo_image = pygame.transform.scale(mainlogo_image, (530,334))
+
 # 마스크 생성 함수
 def create_mask(image):
     surface = pygame.Surface(image.get_size(), pygame.SRCALPHA)
@@ -677,6 +682,7 @@ def intro():
 
     while intro:
         screen.blit(background_img,(0,0))
+        screen.blit(mainlogo_image, (size[0] // 2 - mainlogo_image.get_width() // 2, size[1] // 2 - mainlogo_image.get_height()))
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
