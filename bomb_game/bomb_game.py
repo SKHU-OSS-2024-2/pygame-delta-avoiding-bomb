@@ -23,6 +23,9 @@ bgm_2 = 'bomb_game/sound/BGM2.wav'
 bgm_3 = 'bomb_game/sound/BGM3.wav'
 bgm_4 = 'bomb_game/sound/BGM4.wav'
 
+#font 로드
+fontObj = pygame.font.Font()
+
 #배경 이미지 로드
 background_img = pygame.image.load('bomb_game/img/background.jpg')
 
