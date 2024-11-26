@@ -1,18 +1,33 @@
-# PYGAME-DELTA-AVOIDING-TRASH
+## 💣 Avoiding-Bomb 
 
-# 게임 소개
+![KakaoTalk_20241126_220048041](https://github.com/user-attachments/assets/d9365a32-0328-4359-bdea-768845334c91)
 
-**제목 : 오물풍선 피하기**
+> 성공회대학교 2024-2학기 오픈소스SW개발 Team Delta  
+> 개발 기간: 2024.09 ~ 2024.12 
 
-**스토리 : 하늘에서 오물풍선이 떨어집니다! 쓰레기에 범벅이 되지 않도록 피해보세요!**
+## 📑 목차
+- [개요](#개요)
+- [게임 시작 가이드](#게임-시작-가이드)
+- [게임 플레이 방식](#게임-플레이-방식)
 
-# 게임 시작 방법
+## 개요
+- 프로젝트 이름: **Avoiding-Bomb**
+- 프로젝트 개발 기간: **2024.09 ~ 2024.12**
+- 개발 환경 및 언어  
+<img src="https://img.shields.io/badge/VISUAL STUDIO CODE-007ACC?style=for-the-badge&logo=Visual Studio Code&logoColor=white"/>  <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">  <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">  <img src="https://img.shields.io/badge/Pygame-339933?style=for-the-badge&logo=pygame&logoColor=white">  <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=yellow">   
 
-## 깃허브에서 fork 및 clone
+- Team: **Delta**([박주원](https://github.com/juwon02), [이정혁](https://github.com/likevanilla), [이진](https://github.com/jine531), [최다연](https://github.com/choi-day))
+
+
+
+  
+## 게임 시작 가이드
+
+### 깃허브에서 fork 및 clone
 + 올라온 코드를 자신의 깃허브에 fork 후 로컬에 clone한다.
 
 
-## Visual Studio
+### Visual Studio
 
 Visual Sudio 다운로드
   
@@ -22,7 +37,7 @@ Visual Sudio 다운로드
 
 2. Visual Stdio에서 git hub에서 clone한 코드를 열어본다.
 
-## pygame
+### pygame
 
 pygame 다운로드
 
@@ -33,28 +48,46 @@ pygame 다운로드
 
          pip install pygame
 
-## 게임 실행
+### 게임 실행
 
 1. bomb_game 파일에서 bomb_game.py를 선택한 후 상단 메뉴에서 RUN-> Start Without Debugging을 선택한다.
 
-# 게임 규칙
+## 게임 플레이 방식
 
-게임 시작 전
+|시작화면이미지|플레이화면이미지|
+|:---:|:---:|
+|시작 화면|플레이 화면|
 
-1. 시작을 누르면 게임이 시작됩니다.
+### 캐릭터 이동 방법
 
-게임 플레이
+|이동방향|왼쪽(좌)|오른쪽(우)|
+|:---:|:---:|:---:|
+|방향키|⬅️|➡️|
 
-1. 캐릭터는 좌우방향키를 통해 움직임 제어가 가능합니다.
-2. 쓰레기와 충돌하면 생명이 하나씩 깎이게 됩니다.
-남은 생명은 우측 상단에서 확인할 수 있습니다.
-3. 주어진 3개의 생명을 모두 소진하면 게임이 종료됩니다. 
+### 🔜 인트로 
 
-게임 종료
+- `Start` 버튼을 누르면 게임이 시작됩니다.   
+- `Quit` 버튼을 누르면 게임을 종료합니다.
 
-1. 살아남은 시간으로 기록을 세워보세요!
-2. 게임이 끝난 후 재시작 버튼으로 게임을 다시 시작할 수 있습니다.
-3. 게임이 끝난 후 종료 버튼으로 게임을 종료시킬 수 있습니다.
+### 🔛 게임 플레이 
+
+### ➕
+|번개|별|시계|하트|
+|:---:|:---:|:---:|:---:|
+|<img src="bomb_game/img/fast.png" width="30" height="30">|<img src="bomb_game/img/star.png" width="30" height="30">|<img src="bomb_game/img/Clock.png" width="30" height="30">|<img src="bomb_game/img/heart.png" width="30" height="30">|
+|캐릭터의 이동속도가 빨라집니다.|잠시동안 폭탄과 충돌하지 않습니다.|잠시동안 폭탄의 낙하 속도를 늦춥니다.|생명을 1개 추가해줍니다.|
+
+### ➖
+|폭탄|다이너마이트|거북이|
+|:---:|:---:|:---:|
+|<img src="bomb_game/img/bomb.png" width="30" height="30">|<img src="bomb_game/img/damage_bomb.png" width="30" height="30">|<img src="bomb_game/img/slow_bomb.png" width="30" height="30">|
+|생명이 1개 깎입니다.|생명이 2개 깎입니다.|캐릭터의 이동속도가 느려집니다.|
+
+### 🔚 게임 종료 
+
+- 살아남은 시간으로 자신만의 기록을 세워보세요!   
+- `RE?` 버튼을 누르면 게임이 재시작됩니다.   
+- `Quit`  버튼을 누르면 게임을 종료합니다.
 
 
 ## License
