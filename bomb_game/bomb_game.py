@@ -66,6 +66,9 @@ clock_image = pygame.image.load('bomb_game/img/Clock.png').convert_alpha()
 # 스타 이미지 로드
 star_image = pygame.image.load('bomb_game/img/star.png').convert_alpha()
 
+#gameover 이미지 로드
+gameover_image = pygame.image.load('bomb_game/img/gameover.png').convert_alpha()
+
 # 마스크 생성 함수
 def create_mask(image):
     surface = pygame.Surface(image.get_size(), pygame.SRCALPHA)
@@ -242,7 +245,7 @@ def runGame():
     person_speed = 5 # 캐릭터 이동속도 변수
     moving = False
 
-    font = pygame.font.SysFont(None, 75)  # 게임오버 텍스트를 위한 폰트 설정
+    font = pygame.font.SysFont(None, 70)  # 게임오버 텍스트를 위한 폰트 설정
     life_font = pygame.font.SysFont(None, 50)  # 목숨 표시를 위한 폰트 설정
 
     game_over_time = None #게임 오버 시간을 저장하기 위한 변수
@@ -655,10 +658,9 @@ def runGame():
 
         # 게임 오버 시 메시지 출력
         if game_over:
-            game_over_text = font.render("Game Over", True, WHITE)
             game_over_time_text = font.render(f"Time: {game_over_time:.2f} sec", True, WHITE)
-            screen.blit(game_over_text, (size[0] // 2 - game_over_text.get_width() // 2, size[1] // 2 - game_over_text.get_height() // 2))
-            screen.blit(game_over_time_text, (size[0] // 2 - game_over_time_text.get_width() // 2, size[1] // 2 + game_over_text.get_height()))
+            screen.blit(gameover_image, (size[0] // 2 - gameover_image.get_width() // 2, size[1] // 2 - gameover_image.get_height()))
+            screen.blit(game_over_time_text, (size[0] // 2 - game_over_time_text.get_width() //2, size[1] // 2 + 10))
             endBtn=button("Quit", 100,525,400,100,action=True,fcolor=WHITE)
             if endBtn == True:
                 return pygame.quit()
