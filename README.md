@@ -16,45 +16,48 @@
 - 개발 환경 및 언어  
 <img src="https://img.shields.io/badge/VISUAL STUDIO CODE-007ACC?style=for-the-badge&logo=Visual Studio Code&logoColor=white"/>  <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">  <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">  <img src="https://img.shields.io/badge/Pygame-339933?style=for-the-badge&logo=pygame&logoColor=white">  <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=yellow">   
 
-- Team: **Delta**([박주원](https://github.com/juwon02), [이정혁](https://github.com/likevanilla), [이진](https://github.com/jine531), [최다연](https://github.com/choi-day))
+### Team Delta ☃️
 
-
+|박주원|이정혁|이 진|최다연|
+|:---:|:---:|:---:|:---:|
+|[@juwon02](https://github.com/juwon02)|[@likevanilla](https://github.com/likevanilla)|[@jine531](https://github.com/jine531)|[@choi-day](https://github.com/choi-day)|
 
   
 ## 게임 시작 가이드
 
-### 깃허브에서 fork 및 clone
-+ 올라온 코드를 자신의 깃허브에 fork 후 로컬에 clone한다.
+### VSCode 설치 및 확장 프로그램 설치
+- [공식 홈페이지](https://visualstudio.microsoft.com/ko/)에서 VSCode를 다운로드하고 설치합니다.
+- VSCode를 실행하고, 왼쪽 사이드바의 `확장` 아이콘을 클릭하여 확장 탭으로 이동합니다.
+- 검색창에 `Python`을 입력하고, `Python` 확장을 설치합니다.
 
+### Github 레포지토리 복제
+- 해당 레포지토리 메인 화면 오른쪽 상단 초록색 버튼 `Code`를 클릭합니다.
+- URL을 복사합니다.
+- VSCode에서 왼쪽 사이드바에서 `소스 관리` 아이콘을 클릭합니다.
+- `Git: Clone` 또는 `레포지토리 복제`를 선택하고 복사한 URL을 붙여넣습니다.
+- 저장할 위치를 선책하고 Clone 합니다. 
 
-### Visual Studio
+### pygame 설치
 
-Visual Sudio 다운로드
-  
-  
-1. [Visual Studio](https://visualstudio.microsoft.com/ko/)사이트에서 Visual Studio를 다운로드한다.
+- VSCode에서 왼쪽 사이드바의 `확장` 아이콘을 클릭하여 확장 탭으로 이동합니다.
+- 검색창에 `Pygame`을 입력하고, `Pygame Snippets` 확장을 설치합니다.
+- 또는 터미널에 다음 명령어를 실행합니다.
+```
+pip install pygame
+```
 
-
-2. Visual Stdio에서 git hub에서 clone한 코드를 열어본다.
-
-### pygame
-
-pygame 다운로드
-
-1. Visual Studio 터미널 창을 연다.
-
-
-2. pygame을 설치하기 위해 아래의 명령어를 입력한다.
-
-         pip install pygame
 
 ### 게임 실행
 
-1. bomb_game 파일에서 bomb_game.py를 선택한 후 상단 메뉴에서 RUN-> Start Without Debugging을 선택한다.
+- bomb_game 파일에서 bomb_game.py를 선택한 후 상단 메뉴에서 RUN-> Start Without Debugging을 선택합니다.
+- 또는 터미널에 다음 명령어를 실행합니다.
+```
+python bomb_game/bomb_game.py
+```
 
 ## 게임 플레이 방식
 
-|시작화면이미지|플레이화면이미지|
+|![시작화면](https://github.com/user-attachments/assets/90f06903-4009-4d7d-9891-5ba7be8a9ae6)|![플레이화면](https://github.com/user-attachments/assets/1222f373-6c97-4cc3-998f-daa6872c4414)|
 |:---:|:---:|
 |시작 화면|플레이 화면|
 
