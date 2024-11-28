@@ -251,6 +251,10 @@ def runGame():
         clock.tick(30)  # 초당 30프레임 설정
         screen.blit(background_img,(0,0)) # 화면을 배경이미지로 채움
 
+        PauseBtn=button("II",525,25,50,50,action=True,fcolor=WHITE)
+        if PauseBtn == True:
+            return pygame.quit()
+
         # 키 이벤트 처리
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
