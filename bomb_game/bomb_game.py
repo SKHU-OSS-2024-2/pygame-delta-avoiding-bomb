@@ -131,7 +131,7 @@ animation_timer = 0  # 프레임 전환을 위한 시간 누적
 person_image = person_idle_image  # 초기 이미지는 가만히 있는 상태
 
 # 타이머에 사용할 폰트 설정
-game_font = pygame.font.Font(None, 200)
+game_font = pygame.font.Font('bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf', 200)
 
 def reset(): # 게임 상태와 관련된 변수 초기화 함수
     global done, clock, start_ticks, game_over, lives, elapsed_time
@@ -160,7 +160,7 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
         pygame.draw.rect(screen, BLACK, (x,y,w,h))
         fcolor=WHITE
 
-    smallTEXT = pygame.font.SysFont("malgungothic", 30)
+    smallTEXT = pygame.font.SysFont("bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf", 30)
     textSurf = smallTEXT.render(msg, True, fcolor)
     textRect = textSurf.get_rect()
     textRect.center = ((x+(w/2)),(y+(h/2)))
@@ -250,8 +250,8 @@ def runGame():
     person_speed = 5 # 캐릭터 이동속도 변수
     moving = False
 
-    font = pygame.font.SysFont(None, 70)  # 게임오버 텍스트를 위한 폰트 설정
-    life_font = pygame.font.SysFont(None, 50)  # 목숨 표시를 위한 폰트 설정
+    font = pygame.font.SysFont('https://github.com/choi-day/GDGoC_App.git', 70)  # 게임오버 텍스트를 위한 폰트 설정
+    life_font = pygame.font.SysFont('https://github.com/choi-day/GDGoC_App.git', 50)  # 목숨 표시를 위한 폰트 설정
 
     game_over_time = None #게임 오버 시간을 저장하기 위한 변수
 
