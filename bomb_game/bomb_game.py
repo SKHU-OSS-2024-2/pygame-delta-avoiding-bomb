@@ -11,6 +11,13 @@ except pygame.error as e:
     print("재생 장치 관련 오류로 인해 BGM이 나오지 않습니다.")
     print(f"{e}")
 
+def play_effect(effect):
+    try:
+        effect.play()
+    except pygame.error as e:
+        print("재생 장치 관련 오류로 인해 BGM이 나오지 않습니다.")
+        print(f"{e}")
+
 # 게임 화면 크기 및 색상 설정
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -23,6 +30,11 @@ bgm_2 = 'bomb_game/sound/BGM2.wav'
 bgm_3 = 'bomb_game/sound/BGM3.wav'
 bgm_4 = 'bomb_game/sound/BGM4.wav'
 
+#효과음 파일 로드
+star_effect = pygame.mixer.Sound('bomb_game/sound/star.wav')
+bomb_effect = pygame.mixer.Sound('bomb_game/sound/bomb.wav')
+etc_effect = pygame.mixer.Sound('bomb_game/sound/etc.wav')
+
 #이미지 로드
 bomb_image = pygame.image.load('bomb_game/img/bomb.png').convert_alpha() # 폭탄 이미지 로드
 heart_image = pygame.image.load('bomb_game/img/heart.png').convert_alpha() # 생명 이미지 로드
@@ -32,6 +44,7 @@ star_image = pygame.image.load('bomb_game/img/star.png').convert_alpha()# 스타
 gameover_image = pygame.image.load('bomb_game/img/gameover.png').convert_alpha()#gameover 이미지 로드
 mainlogo_image = pygame.image.load('bomb_game/img/mainlogo.png').convert_alpha()#mainlogo 이미지 로드
 background_img = pygame.image.load('bomb_game/img/background.jpg')#배경 이미지 로드
+
 # 특성 폭탄 이미지 로드 및 크기 조정
 slow_bomb_image = pygame.transform.scale(
     pygame.image.load('bomb_game/img/slow_bomb.png').convert_alpha(),
@@ -444,9 +457,11 @@ def runGame():
 
                     if collision:
                         if bomb['type'] == "slow":
+                            play_effect(bomb_effect)
                             special_bombs.remove(bomb)
                             person_speed = max(person_speed - 0.2, 0.2)
                         elif bomb['type'] == "damage":
+                            play_effect(bomb_effect)
                             special_bombs.remove(bomb)
                             lives -= 2
                             if lives <= 0:
@@ -503,6 +518,7 @@ def runGame():
                     collision = check_collision(person_right_masks[animation_index], heart_mask, offset)
                 
                 if collision:
+                    play_effect(etc_effect)
                     lives += 1
                     heart_spawned = False
                     heart.top = -150
@@ -517,6 +533,7 @@ def runGame():
                     collision = check_collision(person_right_masks[animation_index], star_mask, offset)
                 
                 if collision:
+                    play_effect(star_effect)
                     invincible = True
                     invincible_start_time = pygame.time.get_ticks()
                     star_spawned = False
@@ -537,10 +554,7 @@ def runGame():
                     collision = check_collision(person_right_masks[animation_index], fast_mask, offset)
                 
                 if collision:
-                    print(f"Person position: {person.left}, {person.top}")
-                    print(f"Fast position: {fast.left}, {fast.top}")
-                    print(f"Offset: {offset}")
-                    print(f"Collision detected: {collision}")
+                    play_effect(etc_effect)
                     person_speed += 3
                     fast_spawned = False
                     fast.top = -150
@@ -555,6 +569,7 @@ def runGame():
                 collision = check_collision(person_right_masks[animation_index], clock_mask, offset)
 
             if collision:
+                play_effect(etc_effect)
                 slow_effect_active = True  # 폭탄 속도 감소 효과 활성화
                 slow_effect_end_time = pygame.time.get_ticks() + 4000  # 4초 동안 효과 지속
                 clock_spawned = False  # 시계 사라짐
@@ -585,6 +600,7 @@ def runGame():
                     collision = check_collision(person_right_masks[animation_index], bomb_mask, offset)
 
                 if collision:
+                    play_effect(bomb_effect)
                     diagonal_bombs.remove(bomb)
                     # 목숨 감소 로직
                     lives -= 1
@@ -622,6 +638,7 @@ def runGame():
                     collision = check_collision(person_right_masks[animation_index], bomb_mask, offset)
                 
                 if collision and not invincible:
+                    play_effect(bomb_effect)
                     bombs.remove(bomb)
                     rect = pygame.Rect(bomb_image.get_rect())
                     rect.left = random.randint(0, size[0])
