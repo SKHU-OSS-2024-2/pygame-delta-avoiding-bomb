@@ -297,7 +297,7 @@ def runGame():
             if not game_over:
                 # 경과 시간 계산 및 표시
                 elapsed_time = pygame.time.get_ticks() - start_ticks
-                timer = game_font.render(f"{elapsed_time // 1000} : {elapsed_time % 100:02d}", True, WHITE).convert_alpha()
+                timer = timer_font.render(f"{elapsed_time // 1000} : {elapsed_time % 100:02d}", True, WHITE).convert_alpha()
                 timer.set_alpha(90) #투명도 설정 0~255
                 screen.blit(timer, (size[0] // 2 - timer.get_width() // 2, size[1] // 2 - timer.get_height() // 2))
 
@@ -680,10 +680,9 @@ def runGame():
 
             # 게임 오버 시 메시지 출력
             if game_over:
-                game_over_text = font.render("Game Over", True, WHITE)
-                game_over_time_text = font.render(f"Time: {game_over_time:.2f} sec", True, WHITE)
-                screen.blit(game_over_text, (size[0] // 2 - game_over_text.get_width() // 2, size[1] // 2 - game_over_text.get_height() // 2))
-                screen.blit(game_over_time_text, (size[0] // 2 - game_over_time_text.get_width() // 2, size[1] // 2 + game_over_text.get_height()))
+                game_over_time_text = gameover_font.render(f"Time: {game_over_time:.2f} sec", True, WHITE)
+                screen.blit(gameover_image, (size[0] // 2 - gameover_image.get_width() // 2, size[1] // 2 - gameover_image.get_height()))
+                screen.blit(game_over_time_text, (size[0] // 2 - game_over_time_text.get_width() //2, size[1] // 2 + 10))
                 endBtn=button("Quit", 100,525,400,100,action=True,fcolor=WHITE)
                 if endBtn == True:
                     return pygame.quit()
