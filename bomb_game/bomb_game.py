@@ -270,7 +270,22 @@ def runGame():
                     countdown_timer = pygame.time.get_ticks()
                 else:
                     paused = True
-                last_pause_time = current_time      
+                last_pause_time = current_time
+
+        if countdown_active:
+            current_time = pygame.time.get_ticks()
+            if current_time - countdown_timer >= 1000:  # 1초마다 카운트다운
+                countdown -= 1
+                countdown_timer = current_time
+                
+            if countdown <= 0:
+                paused = False
+                countdown_active = False
+            
+            # 카운트다운 숫자 표시
+            countdown_font = pygame.font.SysFont(None, 200)
+            countdown_text = countdown_font.render(str(max(countdown, 0)), True, BLACK)
+            screen.blit(countdown_text, (size[0] // 2 - countdown_text.get_width() // 2, size[1] // 2 - countdown_text.get_height() // 2))       
 
         # 키 이벤트 처리
         for event in pygame.event.get():
