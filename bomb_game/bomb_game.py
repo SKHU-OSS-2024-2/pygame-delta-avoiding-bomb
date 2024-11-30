@@ -25,6 +25,7 @@ size = [600, 800]
 screen = pygame.display.set_mode(size)
 
 # 배경 음악 파일 로드
+Intro = 'bomb_game/sound/Intro.wav'
 bgm_1 = 'bomb_game/sound/BGM1.wav'
 bgm_2 = 'bomb_game/sound/BGM2.wav'
 bgm_3 = 'bomb_game/sound/BGM3.wav'
@@ -162,6 +163,15 @@ def toggle_pause():
             paused = True
         return True
     return False
+
+def play_intro_sound():
+    try:
+        pygame.mixer.music.load(Intro)  # 음악 파일 로드
+        pygame.mixer.music.play()  # 음악 재생
+
+    except pygame.error as e:
+        print("재생 장치 관련 오류로 인해 BGM이 나오지 않습니다.")
+        print(f"{e}")
 
 # 게임 실행 함수 정의
 def runGame(): 
@@ -717,6 +727,7 @@ def runGame():
         pygame.display.update()  # 화면 업데이트
 
 def intro():
+    play_intro_sound()
     intro = True
 
     while intro:
