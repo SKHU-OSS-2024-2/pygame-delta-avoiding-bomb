@@ -48,11 +48,11 @@ background_img = pygame.image.load('bomb_game/img/background.jpg')#배경 이미
 # 특성 폭탄 이미지 로드 및 크기 조정
 slow_bomb_image = pygame.transform.scale(
     pygame.image.load('bomb_game/img/slow_bomb.png').convert_alpha(),
-    (70, 120)  # 크기 조정
+    (100, 70)  # 크기 조정
 )
 damage_bomb_image = pygame.transform.scale(
     pygame.image.load('bomb_game/img/damage_bomb.png').convert_alpha(),
-    (70, 120)
+    (70, 99)
 )
 
 # 캐릭터 애니메이션 이미지 로드
@@ -218,7 +218,7 @@ def runGame():
     fast = pygame.Rect(fast_image.get_rect())    
 
     clock_image = pygame.image.load('bomb_game/img/Clock.png')
-    clock_image = pygame.transform.scale(clock_image, (70, 70))  # 시계 크기 조정
+    clock_image = pygame.transform.scale(clock_image, (70, 84))  # 시계 크기 조정
     clock_rect = pygame.Rect(clock_image.get_rect())  # 시계 위치 및 크기 설정
 
     star_image = pygame.image.load('bomb_game/img/star.png')
@@ -263,26 +263,27 @@ def runGame():
         clock.tick(30)  # 초당 30프레임 설정
         screen.blit(background_img,(0,0)) # 화면을 배경이미지로 채움
 
-        PauseBtn = button("II" if not paused else "▶", 525, 25, 50, 50, action=True, fcolor=WHITE)
-        if PauseBtn == True:
-            if toggle_pause():
-                last_pause_time = pygame.time.get_ticks()
+        if not game_over:
+            PauseBtn = button("II" if not paused else "▶", 525, 25, 50, 50, action=True, fcolor=WHITE)
+            if PauseBtn == True:
+                if toggle_pause():
+                    last_pause_time = pygame.time.get_ticks()
 
 
-        if countdown_active:
-            current_time = pygame.time.get_ticks()
-            if current_time - countdown_timer >= 1000:  # 1초마다 카운트다운
-                countdown -= 1
-                countdown_timer = current_time
+            if countdown_active:
+                current_time = pygame.time.get_ticks()
+                if current_time - countdown_timer >= 1000:  # 1초마다 카운트다운
+                    countdown -= 1
+                    countdown_timer = current_time
+                    
+                if countdown <= 0:
+                    paused = False
+                    countdown_active = False
                 
-            if countdown <= 0:
-                paused = False
-                countdown_active = False
-            
-            # 카운트다운 숫자 표시
-            countdown_font = pygame.font.SysFont(None, 200)
-            countdown_text = countdown_font.render(str(max(countdown, 0)), True, BLACK)
-            screen.blit(countdown_text, (size[0] // 2 - countdown_text.get_width() // 2, size[1] // 2 - countdown_text.get_height() // 2))       
+                # 카운트다운 숫자 표시
+                countdown_font = pygame.font.SysFont(None, 200)
+                countdown_text = countdown_font.render(str(max(countdown, 0)), True, BLACK)
+                screen.blit(countdown_text, (size[0] // 2 - countdown_text.get_width() // 2, size[1] // 2 - countdown_text.get_height() // 2))       
 
         # 키 이벤트 처리
         for event in pygame.event.get():
@@ -559,35 +560,35 @@ def runGame():
                     fast_spawned = False
                     fast.top = -150
 
-            # 시계와 충돌 감지
-            offset = (clock_rect.left - person.left, clock_rect.top - person.top)
-            if person_dx == 0:
-                collision = check_collision(person_idle_mask, clock_mask, offset)
-            elif person_dx < 0:
-                collision = check_collision(person_left_masks[animation_index], clock_mask, offset)
-            else:
-                collision = check_collision(person_right_masks[animation_index], clock_mask, offset)
+                # 시계와 충돌 감지
+                offset = (clock_rect.left - person.left, clock_rect.top - person.top)
+                if person_dx == 0:
+                    collision = check_collision(person_idle_mask, clock_mask, offset)
+                elif person_dx < 0:
+                    collision = check_collision(person_left_masks[animation_index], clock_mask, offset)
+                else:
+                    collision = check_collision(person_right_masks[animation_index], clock_mask, offset)
 
-            if collision:
-                play_effect(etc_effect)
-                slow_effect_active = True  # 폭탄 속도 감소 효과 활성화
-                slow_effect_end_time = pygame.time.get_ticks() + 4000  # 4초 동안 효과 지속
-                clock_spawned = False  # 시계 사라짐
+                if collision and clock_spawned:
+                    play_effect(etc_effect)
+                    slow_effect_active = True  # 폭탄 속도 감소 효과 활성화
+                    slow_effect_end_time = pygame.time.get_ticks() + 4000  # 4초 동안 효과 지속
+                    clock_spawned = False  # 시계 사라짐
 
-            # 폭탄 속도 감소 효과 종료
-            if slow_effect_active and pygame.time.get_ticks() > slow_effect_end_time:
-                slow_effect_active = False  # 효과 종료
+                # 폭탄 속도 감소 효과 종료
+                if slow_effect_active and pygame.time.get_ticks() > slow_effect_end_time:
+                    slow_effect_active = False  # 효과 종료
 
-            for bomb in bombs:
-                bomb_speed = bomb['dy'] // 4 if slow_effect_active else bomb['dy']  # 효과 적용 시 속도 감소
-                bomb['rect'].top += bomb_speed
-                if bomb['rect'].top > size[1]:  # 화면 아래로 나가면 새로운 폭탄 추가
-                    bombs.remove(bomb)
-                    rect = pygame.Rect(bomb_image.get_rect())
-                    rect.left = random.randint(0, size[0] - rect.width)
-                    rect.top = -100
-                    dy = random.randint(3 + elapsed_time // 5000, 7 + elapsed_time // 5000)
-                    bombs.append({'rect': rect, 'dy': dy})
+                for bomb in bombs:
+                    bomb_speed = bomb['dy'] // 4 if slow_effect_active else bomb['dy']  # 효과 적용 시 속도 감소
+                    bomb['rect'].top += bomb_speed
+                    if bomb['rect'].top > size[1]:  # 화면 아래로 나가면 새로운 폭탄 추가
+                        bombs.remove(bomb)
+                        rect = pygame.Rect(bomb_image.get_rect())
+                        rect.left = random.randint(0, size[0] - rect.width)
+                        rect.top = -100
+                        dy = random.randint(3 + elapsed_time // 5000, 7 + elapsed_time // 5000)
+                        bombs.append({'rect': rect, 'dy': dy})
                     
             # 대각선 폭탄 충돌 검사
             for bomb in diagonal_bombs[:]:
