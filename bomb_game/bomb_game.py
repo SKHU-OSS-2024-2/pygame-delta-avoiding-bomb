@@ -159,6 +159,19 @@ def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
     textRect.center = ((x+(w/2)),(y+(h/2)))
     screen.blit(textSurf, textRect)
 
+def toggle_pause():
+    global paused, countdown_active, countdown, countdown_timer
+    current_time = pygame.time.get_ticks()
+    if current_time - last_pause_time > pause_cooldown:
+        if paused:
+            countdown_active = True
+            countdown = 3
+            countdown_timer = pygame.time.get_ticks()
+        else:
+            paused = True
+        return True
+    return False
+
 # 게임 실행 함수 정의
 def runGame(): 
   
@@ -261,16 +274,9 @@ def runGame():
 
         PauseBtn = button("II" if not paused else "▶", 525, 25, 50, 50, action=True, fcolor=WHITE)
         if PauseBtn == True:
-            current_time = pygame.time.get_ticks()
-            if current_time - last_pause_time > pause_cooldown:
-                if paused:
-                    # 일시정지 해제 시 카운트다운 시작
-                    countdown_active = True
-                    countdown = 3
-                    countdown_timer = pygame.time.get_ticks()
-                else:
-                    paused = True
-                last_pause_time = current_time
+            if toggle_pause():
+                last_pause_time = pygame.time.get_ticks()
+
 
         if countdown_active:
             current_time = pygame.time.get_ticks()
@@ -289,6 +295,10 @@ def runGame():
 
         # 키 이벤트 처리
         for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if toggle_pause():
+                        last_pause_time = pygame.time.get_ticks()
             if event.type == pygame.QUIT:
                 done = True  # 게임 종료
                 break
@@ -303,6 +313,7 @@ def runGame():
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     person_dx = 0  # 키를 떼면 이동 정지
                     moving = False
+            
 
         if not paused:
             # 게임 오버가 아닐 때 게임 로직 실행
