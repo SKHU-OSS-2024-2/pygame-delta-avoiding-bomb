@@ -45,6 +45,11 @@ star_image = pygame.image.load('bomb_game/img/star.png').convert_alpha()# 스타
 gameover_image = pygame.image.load('bomb_game/img/gameover.png').convert_alpha()#gameover 이미지 로드
 mainlogo_image = pygame.image.load('bomb_game/img/mainlogo.png').convert_alpha()#mainlogo 이미지 로드
 background_img = pygame.image.load('bomb_game/img/background.jpg')#배경 이미지 로드
+start_image = pygame.image.load('bomb_game/img/start.png').convert_alpha()#start 이미지 로드
+quit_image = pygame.image.load('bomb_game/img/Quit.png').convert_alpha()#quit 이미지 로드
+re_image = pygame.image.load('bomb_game/img/re.png').convert_alpha()#re 이미지 로드
+pause_image = pygame.image.load('bomb_game/img/pause.png').convert_alpha()#pause 이미지 로드
+play_image = pygame.image.load('bomb_game/img/play.png').convert_alpha()#play 이미지 로드
 
 # 특성 폭탄 이미지 로드 및 크기 조정
 slow_bomb_image = pygame.transform.scale(
@@ -98,6 +103,8 @@ clock_image = pygame.transform.scale(clock_image, (70, 70))
 slow_image = pygame.transform.scale(slow_bomb_image,(70, 90))
 damage_image = pygame.transform.scale(damage_bomb_image, (70, 90))
 mainlogo_image = pygame.transform.scale(mainlogo_image, (530,334))
+pause_image = pygame.transform.scale(pause_image, (50, 50))
+play_image = pygame.transform.scale(play_image, (50, 50))
 
 # 마스크 생성
 # 캐릭터 마스크 생성
@@ -132,24 +139,23 @@ def text_objects(text, font): # START버튼
     textSurface = font.render(text, True, WHITE)
     return textSurface, textSurface.get_rect()
 
-def button(msg,x,y,w,h,action=None,fcolor=WHITE): # START버튼 상세
+def button_with_image(image, x, y, w, h, action=None, centered=False,highlight_color=(255, 255, 255, 100)):
+    if centered:
+        x = (size[0] - w) // 2
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
-    if x+w>mouse[0]> x and y+h > mouse[1] > y:
-        pygame.draw.rect(screen, WHITE, (x,y,w,h) )
-        fcolor=BLACK
+    button_rect = pygame.Rect(x, y, w, h)
+    if button_rect.collidepoint(mouse):
+        highlight_surface = pygame.Surface((w, h), pygame.SRCALPHA)  
+        highlight_surface.fill(highlight_color)  
+        screen.blit(highlight_surface, (x, y)) 
+    screen.blit(image, button_rect) 
 
-        if click[0] == 1 and action !=None:
+    if button_rect.collidepoint(mouse):
+        if click[0] == 1 and action is not None:
             return True
-    else:
-        pygame.draw.rect(screen, BLACK, (x,y,w,h))
-        fcolor=WHITE
-  
-    textSurf = button_font.render(msg, True, fcolor)
-    textRect = textSurf.get_rect()
-    textRect.center = ((x+(w/2)),(y+(h/2)))
-    screen.blit(textSurf, textRect)
+    return False
 
 def toggle_pause():
     global paused, countdown_active, countdown, countdown_timer
@@ -273,8 +279,8 @@ def runGame():
         clock.tick(30)  # 초당 30프레임 설정
         screen.blit(background_img,(0,0)) # 화면을 배경이미지로 채움
 
-        PauseBtn = button("II" if not paused else "▶", 525, 25, 50, 50, action=True, fcolor=WHITE)
-        if PauseBtn == True:
+        PauseBtn = button_with_image(pause_image if not paused else play_image, 525, 25, 50, 50, action=True)
+        if PauseBtn:
             if toggle_pause():
                 last_pause_time = pygame.time.get_ticks()
 
@@ -710,10 +716,10 @@ def runGame():
                 game_over_time_text = gameover_font.render(f"Time: {game_over_time:.2f} sec", True, WHITE)
                 screen.blit(gameover_image, (size[0] // 2 - gameover_image.get_width() // 2, size[1] // 2 - gameover_image.get_height()))
                 screen.blit(game_over_time_text, (size[0] // 2 - game_over_time_text.get_width() //2, size[1] // 2 + 10))
-                endBtn=button("Quit", 100,525,400,100,action=True,fcolor=WHITE)
+                endBtn=button_with_image(quit_image,0, 525, quit_image.get_width(), quit_image.get_height(), action=True, centered=True)
                 if endBtn == True:
                     return pygame.quit()
-                reBtn=button("RE?", 100,650,400,100,action=True,fcolor=WHITE)
+                reBtn=button_with_image(re_image,  0, 650, re_image.get_width(), re_image.get_height(), action=True, centered=True)
                 if reBtn == True:
                     return runGame()
                 
@@ -739,10 +745,10 @@ def intro():
                 pygame.quit()
                 quit()
 
-        strBtn=button("Start",100,525,400,100,action=True,fcolor=WHITE)
+        strBtn=button_with_image(start_image, 0, 525, start_image.get_width(), start_image.get_height(), action=True, centered=True)
         if strBtn == True:
             return runGame()
-        endBtn=button("Quit", 100,650,400,100,action=True,fcolor=WHITE)
+        endBtn=button_with_image(quit_image, 0, 650, quit_image.get_width(), quit_image.get_height(), action=True, centered=True)
         if endBtn == True:
             return pygame.quit()
         pygame.display.update()        
