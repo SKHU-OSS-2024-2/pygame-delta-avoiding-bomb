@@ -103,8 +103,11 @@ clock_image = pygame.transform.scale(clock_image, (70, 70))
 slow_image = pygame.transform.scale(slow_bomb_image,(70, 90))
 damage_image = pygame.transform.scale(damage_bomb_image, (70, 90))
 mainlogo_image = pygame.transform.scale(mainlogo_image, (530,334))
-pause_image = pygame.transform.scale(pause_image, (50, 50))
-play_image = pygame.transform.scale(play_image, (50, 50))
+pause_image = pygame.transform.scale(pause_image, (50, 73))
+play_image = pygame.transform.scale(play_image, (50, 73))
+start_image = pygame.transform.scale(start_image, (200, 51))
+quit_image = pygame.transform.scale(quit_image, (200, 73))
+re_image = pygame.transform.scale(re_image, (200, 88))
 
 # 마스크 생성
 # 캐릭터 마스크 생성
