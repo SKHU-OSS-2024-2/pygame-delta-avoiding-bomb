@@ -24,6 +24,7 @@ bgm_3 = 'bomb_game/sound/BGM3.wav'
 bgm_4 = 'bomb_game/sound/BGM4.wav'
 star_effect = pygame.mixer.Sound('bomb_game/sound/star.wav')
 bomb_effect = pygame.mixer.Sound('bomb_game/sound/bomb.wav')
+heart_effect = pygame.mixer.Sound('bomb_game/sound/heart.wav')
 etc_effect = pygame.mixer.Sound('bomb_game/sound/etc.wav')
 
 #폰트 설정
@@ -437,7 +438,7 @@ def runGame():
 
                     if collision and not invincible:
                         if bomb['type'] == "slow":
-                            play_effect(bomb_effect)
+                            play_effect(etc_effect)
                             special_bombs.remove(bomb)
                             person_speed = max(person_speed - 0.2, 0.2)
                         elif bomb['type'] == "damage":
@@ -489,7 +490,7 @@ def runGame():
                     collision = check_collision(person_right_masks[animation_index], heart_mask, offset)
                 
                 if collision:
-                    play_effect(etc_effect)
+                    play_effect(heart_effect)
                     lives += 1
                     heart_spawned = False
                     heart.top = -150
