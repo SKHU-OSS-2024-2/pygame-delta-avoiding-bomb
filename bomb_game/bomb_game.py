@@ -45,8 +45,8 @@ fast_image = pygame.transform.scale(pygame.image.load('bomb_game/img/fast.png').
 clock_image = pygame.transform.scale(pygame.image.load('bomb_game/img/Clock.png').convert_alpha(), (70, 84))
 star_image = pygame.transform.scale(pygame.image.load('bomb_game/img/star.png').convert_alpha(), (70,70))
 mainlogo_image = pygame.transform.scale(pygame.image.load('bomb_game/img/mainlogo.png').convert_alpha(), (530,334))
-pause_image = pygame.transform.scale(pygame.image.load('bomb_game/img/pause.png').convert_alpha(), (50, 50))
-play_image = pygame.transform.scale(pygame.image.load('bomb_game/img/play.png').convert_alpha(), (50, 50))
+pause_image = pygame.transform.scale(pygame.image.load('bomb_game/img/pause.png').convert_alpha(), (45, 66))
+play_image = pygame.transform.scale(pygame.image.load('bomb_game/img/play.png').convert_alpha(), (50, 66))
 slow_image = pygame.transform.scale(pygame.image.load('bomb_game/img/slow_bomb.png').convert_alpha(),(100, 70))
 damage_image = pygame.transform.scale(pygame.image.load('bomb_game/img/damage_bomb.png').convert_alpha(),(70, 99))
 
