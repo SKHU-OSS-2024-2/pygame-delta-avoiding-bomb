@@ -57,7 +57,7 @@ python bomb_game/bomb_game.py
 
 ## 게임 플레이 방식
 
-|![시작화면](https://github.com/user-attachments/assets/90f06903-4009-4d7d-9891-5ba7be8a9ae6)|![플레이화면](https://github.com/user-attachments/assets/1222f373-6c97-4cc3-998f-daa6872c4414)|
+|![시작화면](https://github.com/user-attachments/assets/4d5e1afe-1e92-4003-8daf-f245b645e43a)|![플레이화면](https://github.com/user-attachments/assets/dfedc481-2325-40cc-a8fe-63cb099b6065)|
 |:---:|:---:|
 |시작 화면|플레이 화면|
 
@@ -87,6 +87,9 @@ python bomb_game/bomb_game.py
 |:---:|:---:|:---:|
 |<img src="bomb_game/img/bomb.png" width="30" height="30">|<img src="bomb_game/img/damage_bomb.png" width="30" height="30">|<img src="bomb_game/img/slow_bomb.png" width="30" height="30">|
 |생명이 1개 깎입니다.|생명이 2개 깎입니다.|캐릭터의 이동속도가 느려집니다.|
+
+- 게임 플레이 도중에 키보드에서 `Space bar`를 누르면 게임이 일시정지됩니다.   
+  다시 `space bar`를 누르게 되면 3초 뒤에 게임이 재개됩니다.
 
 ### 🔚 게임 종료 
 
