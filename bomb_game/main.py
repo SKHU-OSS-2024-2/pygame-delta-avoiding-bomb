@@ -1,6 +1,7 @@
 import pygame  # pygame 라이브러리 선언
 import random
 import os
+import sys
 
 pygame.init()  # pygame 초기화
 try:
@@ -16,49 +17,58 @@ WHITE = (255, 255, 255)
 size = [600, 800]
 screen = pygame.display.set_mode(size)
 
+def resource_path(relative_path):
+    """ PyInstaller 실행 파일에서 리소스를 불러오기 위한 경로 반환 """
+    try:
+        base_path = sys._MEIPASS  # PyInstaller가 생성한 임시 폴더
+    except AttributeError:
+        base_path = os.path.abspath(".")  # 개발 환경 경로
+
+    return os.path.join(base_path, relative_path)
+
 # 배경 음악 및 효과음 파일 로드
-Intro = 'bomb_game/sound/Intro.wav'
-bgm_1 = 'bomb_game/sound/BGM1.wav'
-bgm_2 = 'bomb_game/sound/BGM2.wav'
-bgm_3 = 'bomb_game/sound/BGM3.wav'
-bgm_4 = 'bomb_game/sound/BGM4.wav'
-star_effect = pygame.mixer.Sound('bomb_game/sound/star.wav')
-bomb_effect = pygame.mixer.Sound('bomb_game/sound/bomb.wav')
-heart_effect = pygame.mixer.Sound('bomb_game/sound/heart.wav')
-etc_effect = pygame.mixer.Sound('bomb_game/sound/etc.wav')
+Intro = resource_path('bomb_game/sound/Intro.wav')
+bgm_1 = resource_path('bomb_game/sound/BGM1.wav')
+bgm_2 = resource_path('bomb_game/sound/BGM2.wav')
+bgm_3 = resource_path('bomb_game/sound/BGM3.wav')
+bgm_4 = resource_path('bomb_game/sound/BGM4.wav')
+star_effect = pygame.mixer.Sound(resource_path('bomb_game/sound/star.wav'))
+bomb_effect = pygame.mixer.Sound(resource_path('bomb_game/sound/bomb.wav'))
+heart_effect = pygame.mixer.Sound(resource_path('bomb_game/sound/heart.wav'))
+etc_effect = pygame.mixer.Sound(resource_path('bomb_game/sound/etc.wav'))
 
 #폰트 설정
-gameover_font = pygame.font.Font('bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf', 70)  # 게임오버 텍스트를 위한 폰트 설정
-life_font = pygame.font.Font('bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf', 50)  # 목숨 표시를 위한 폰트 설정
-timer_font = pygame.font.Font('bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf', 200) # 타이머에 사용할 폰트 설정
-button_font = pygame.font.Font("bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf", 30) # 버튼에 사용할 폰트 설정
+gameover_font = pygame.font.Font(resource_path('bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf'), 70)  # 게임오버 텍스트를 위한 폰트 설정
+life_font = pygame.font.Font(resource_path('bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf'), 50)  # 목숨 표시를 위한 폰트 설정
+timer_font = pygame.font.Font(resource_path('bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf'), 200) # 타이머에 사용할 폰트 설정
+button_font = pygame.font.Font(resource_path('bomb_game/font/Pixelify_Sans/static/PixelifySans-Medium.ttf'), 30) # 버튼에 사용할 폰트 설정
 
 #이미지 로드 및 크기 조정
-bomb_image = pygame.image.load('bomb_game/img/bomb.png').convert_alpha() # 폭탄 이미지 로드
-gameover_image = pygame.image.load('bomb_game/img/gameover.png').convert_alpha()#gameover 이미지 로드
-background_img = pygame.image.load('bomb_game/img/background.jpg')#배경 이미지 로드
-start_image = pygame.image.load('bomb_game/img/start.png').convert_alpha()#start 이미지 로드
-quit_image = pygame.image.load('bomb_game/img/Quit.png').convert_alpha()#quit 이미지 로드
-re_image = pygame.image.load('bomb_game/img/re.png').convert_alpha()#re 이미지 로드
-heart_image = pygame.transform.scale(pygame.image.load('bomb_game/img/heart.png').convert_alpha(), (70, 70))
-fast_image = pygame.transform.scale(pygame.image.load('bomb_game/img/fast.png').convert_alpha(), (70, 91))
-clock_image = pygame.transform.scale(pygame.image.load('bomb_game/img/Clock.png').convert_alpha(), (70, 84))
-star_image = pygame.transform.scale(pygame.image.load('bomb_game/img/star.png').convert_alpha(), (70,70))
-mainlogo_image = pygame.transform.scale(pygame.image.load('bomb_game/img/mainlogo.png').convert_alpha(), (530,334))
-pause_image = pygame.transform.scale(pygame.image.load('bomb_game/img/pause.png').convert_alpha(), (45, 66))
-play_image = pygame.transform.scale(pygame.image.load('bomb_game/img/play.png').convert_alpha(), (50, 66))
-slow_image = pygame.transform.scale(pygame.image.load('bomb_game/img/slow_bomb.png').convert_alpha(),(100, 70))
-damage_image = pygame.transform.scale(pygame.image.load('bomb_game/img/damage_bomb.png').convert_alpha(),(70, 99))
+bomb_image = pygame.image.load(resource_path('bomb_game/img/bomb.png')).convert_alpha() # 폭탄 이미지 로드
+gameover_image = pygame.image.load(resource_path('bomb_game/img/gameover.png')).convert_alpha()#gameover 이미지 로드
+background_img = pygame.image.load(resource_path('bomb_game/img/background.jpg'))#배경 이미지 로드
+start_image = pygame.image.load(resource_path('bomb_game/img/start.png')).convert_alpha()#start 이미지 로드
+quit_image = pygame.image.load(resource_path('bomb_game/img/Quit.png')).convert_alpha()#quit 이미지 로드
+re_image = pygame.image.load(resource_path('bomb_game/img/re.png')).convert_alpha()#re 이미지 로드
+heart_image = pygame.transform.scale(pygame.image.load(resource_path('bomb_game/img/heart.png')).convert_alpha(), (70, 70))
+fast_image = pygame.transform.scale(pygame.image.load(resource_path('bomb_game/img/fast.png')).convert_alpha(), (70, 91))
+clock_image = pygame.transform.scale(pygame.image.load(resource_path('bomb_game/img/Clock.png')).convert_alpha(), (70, 84))
+star_image = pygame.transform.scale(pygame.image.load(resource_path('bomb_game/img/star.png')).convert_alpha(), (70,70))
+mainlogo_image = pygame.transform.scale(pygame.image.load(resource_path('bomb_game/img/mainlogo.png')).convert_alpha(), (530,334))
+pause_image = pygame.transform.scale(pygame.image.load(resource_path('bomb_game/img/pause.png')).convert_alpha(), (45, 66))
+play_image = pygame.transform.scale(pygame.image.load(resource_path('bomb_game/img/play.png')).convert_alpha(), (50, 66))
+slow_image = pygame.transform.scale(pygame.image.load(resource_path('bomb_game/img/slow_bomb.png')).convert_alpha(),(100, 70))
+damage_image = pygame.transform.scale(pygame.image.load(resource_path('bomb_game/img/damage_bomb.png')).convert_alpha(),(70, 99))
 
 # 캐릭터 애니메이션 이미지 로드
-person_idle_image = pygame.image.load('bomb_game/img/person_idle.png').convert_alpha()
+person_idle_image = pygame.image.load(resource_path('bomb_game/img/person_idle.png')).convert_alpha()
 person_left_images = [
-    pygame.image.load('bomb_game/img/person_left1.png').convert_alpha(),
-    pygame.image.load('bomb_game/img/person_left2.png').convert_alpha()
+    pygame.image.load(resource_path('bomb_game/img/person_left1.png')).convert_alpha(),
+    pygame.image.load(resource_path('bomb_game/img/person_left2.png')).convert_alpha()
 ]
 person_right_images = [
-    pygame.image.load('bomb_game/img/person_right1.png').convert_alpha(),
-    pygame.image.load('bomb_game/img/person_right2.png').convert_alpha()
+    pygame.image.load(resource_path('bomb_game/img/person_right1.png')).convert_alpha(),
+    pygame.image.load(resource_path('bomb_game/img/person_right2.png')).convert_alpha()
 ]
 
 # 캐릭터 이미지 크기 조정
@@ -163,7 +173,7 @@ def gameover_sound():
 
 # 게임 실행 함수 정의
 def runGame(): 
-  
+
     global done, game_over, lives, start_ticks, elapsed_time, animation_index, animation_timer
     global heart_spawned, last_heart_time, person_speed, fast_spawned, last_fast_time, star_spawned, last_star_time
     global clock_spawned, last_clock_time, slow_effect_active, slow_effect_end_time
